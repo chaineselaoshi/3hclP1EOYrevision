@@ -1,0 +1,1174 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>高华快线 · 试卷一温习站</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500;700;900&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F2ECE0;
+    --paper2:#EAE0CC;
+    --card:#FBF8F1;
+    --ink:#2B2B28;
+    --ink-soft:#6b6355;
+    --seal:#2B5F8C;
+    --seal-dark:#1F4A6E;
+    --warn-red:#B23A2E;
+    --bamboo:#4F6B4F;
+    --bamboo-dark:#3B5039;
+    --gold:#BD8A34;
+    --grid-line:rgba(43,43,40,0.14);
+    --rule:rgba(43,43,40,0.14);
+    --zh-font:'KaiTi','STKaiti','Kaiti SC','楷体',serif;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"Noto Sans SC","PingFang SC",sans-serif;
+    line-height:1.7;
+    -webkit-font-smoothing:antialiased;
+    padding-bottom:80px;
+  }
+  ::selection{background:var(--seal);color:#fff;}
+  body::before{
+    content:"";
+    position:fixed; inset:0;
+    background-image:radial-gradient(rgba(43,43,40,0.035) 1px, transparent 1px);
+    background-size:3px 3px;
+    pointer-events:none;
+    z-index:0;
+  }
+  a{color:var(--seal);}
+  ruby{ ruby-position:over; }
+  rt{ font-family:"Noto Sans SC",sans-serif; font-weight:500; color:var(--seal-dark); font-size:0.5em; }
+
+  /* ============ HEADER ============ */
+  header{ position:relative; padding:52px 24px 34px; text-align:center; overflow:hidden; }
+  header .eyebrow{ font-size:12.5px; letter-spacing:0.32em; color:var(--ink-soft); text-transform:uppercase; }
+  header h1{
+    font-family:"Noto Serif SC"; font-weight:900; font-size:clamp(34px,7vw,58px);
+    margin:10px 0 6px; letter-spacing:0.02em; position:relative; display:inline-block;
+  }
+  header h1 .accent-underline{
+    position:absolute; left:4%; right:4%; bottom:-6px; height:9px;
+    background:var(--seal); opacity:0.85; transform:skewX(-8deg); z-index:-1; border-radius:2px;
+  }
+  header .sub{ font-size:15.5px; color:var(--ink-soft); max-width:520px; margin:14px auto 0; }
+  .stamp-mark{
+    position:absolute; top:28px; right:6%; width:74px; height:74px;
+    border:3px solid var(--seal); border-radius:8px; color:var(--seal);
+    display:flex; align-items:center; justify-content:center;
+    font-family:"Noto Serif SC"; font-weight:900; font-size:26px;
+    transform:rotate(-9deg); opacity:0.75; writing-mode:vertical-rl;
+  }
+  @media (max-width:640px){ .stamp-mark{display:none;} }
+
+  /* ============ TABS ============ */
+  .tabbar{ display:flex; justify-content:center; gap:22px; padding:6px 20px 8px; position:relative; z-index:2; }
+  .tab-btn{ display:flex; flex-direction:column; align-items:center; gap:8px; background:none; border:none; cursor:pointer; padding:6px 4px 10px; color:var(--ink-soft); transition:transform .18s ease; }
+  .tab-btn:hover{ transform:translateY(-2px); }
+  .tab-seal{ width:58px; height:58px; border-radius:50%; border:2.5px solid currentColor; display:flex; align-items:center; justify-content:center; font-family:"Noto Serif SC"; font-weight:700; font-size:24px; transition:all .2s ease; background:transparent; }
+  .tab-btn[data-target="email"] .tab-seal{ color:var(--seal); }
+  .tab-btn[data-target="comp"] .tab-seal{ color:var(--bamboo); }
+  .tab-btn .tab-label{ font-size:14.5px; font-weight:600; letter-spacing:.04em; }
+  .tab-btn.active .tab-seal{ color:#fff; }
+  .tab-btn.active[data-target="email"] .tab-seal{ background:var(--seal); box-shadow:0 4px 14px rgba(43,95,140,.35); }
+  .tab-btn.active[data-target="comp"] .tab-seal{ background:var(--bamboo); box-shadow:0 4px 14px rgba(79,107,79,.35); }
+  .tab-btn.active .tab-label{ color:var(--ink); }
+  .tab-btn.active{ transform:scale(1.03) rotate(-1.5deg); }
+
+  /* ============ SUB-TABS (page 2: 作文) ============ */
+  .subtabbar{ display:flex; justify-content:center; gap:10px; flex-wrap:wrap; margin:4px 0 26px; padding-bottom:18px; border-bottom:1px dashed var(--rule); }
+  .subtab-btn{
+    font-family:"Noto Serif SC"; font-size:14.5px; font-weight:700;
+    background:var(--card); border:1.5px solid var(--rule); color:var(--ink-soft);
+    padding:8px 20px; border-radius:20px; cursor:pointer; transition:all .18s ease;
+  }
+  .subtab-btn:hover{ border-color:var(--bamboo); color:var(--ink); }
+  .subtab-btn.active{ background:var(--bamboo); border-color:var(--bamboo); color:#fff; box-shadow:0 3px 10px rgba(79,107,79,.3); }
+  .subtab-btn[data-subtarget="private"].active{ background:var(--seal); border-color:var(--seal); box-shadow:0 3px 10px rgba(43,95,140,.3); }
+  .subpage{ display:none; animation:fadeIn .3s ease; }
+  .subpage.active{ display:block; }
+
+  /* ============ MAIN ============ */
+  main{ max-width:920px; margin:0 auto; padding:18px 20px 40px; position:relative; z-index:1; }
+  .page{ display:none; animation:fadeIn .35s ease; }
+  .page.active{ display:block; }
+  @keyframes fadeIn{ from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);} }
+  .page-intro{ text-align:center; color:var(--ink-soft); font-size:14.5px; margin:2px 0 30px; padding-bottom:18px; border-bottom:1px dashed var(--rule); }
+
+  /* ---- page1 (电邮): everything Chinese defaults to KaiTi 14pt ---- */
+  #page-email{ font-family:var(--zh-font); font-size:14pt; }
+  #page-email .page-intro{ font-family:"Noto Sans SC",sans-serif; font-size:14.5px; }
+  #page-email .block-desc, #page-email .callout, #page-email .fmt-label-en, #page-email .phrase-en, #page-email .section-tag{ font-family:"Noto Sans SC",sans-serif; }
+
+  /* category section wrapper (私人电邮 / 公务电邮) */
+  .category{ margin-bottom:56px; }
+  .category-head{ display:flex; align-items:center; gap:14px; margin-bottom:6px; }
+  .category-badge{
+    width:46px; height:46px; border-radius:50%; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center;
+    font-family:"Noto Serif SC"; font-weight:900; font-size:19px; color:#fff;
+  }
+  .category.private .category-badge{ background:var(--seal); }
+  .category.official .category-badge{ background:var(--bamboo); }
+  .category-head h2{ font-family:"Noto Serif SC"; font-size:26px; margin:0; font-weight:800; }
+  .category-head .en-cap{ font-family:"Noto Sans SC"; font-size:12.5px; color:var(--ink-soft); display:block; margin-top:2px; }
+  .category-rule{ height:2px; margin:10px 0 26px; border-radius:2px; }
+  .category.private .category-rule{ background:linear-gradient(90deg,var(--seal),transparent); }
+  .category.official .category-rule{ background:linear-gradient(90deg,var(--bamboo),transparent); }
+
+  section.block{ margin-bottom:34px; }
+  .block-head{ display:flex; align-items:baseline; gap:12px; margin-bottom:14px; }
+  .block-num{ font-family:"Noto Serif SC"; font-weight:900; font-size:14px; color:#fff; width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .category.private .block-num{ background:var(--seal); }
+  .category.official .block-num{ background:var(--bamboo); }
+  .block-head h3{ font-family:"Noto Serif SC"; font-size:19px; margin:0; font-weight:700; }
+  .block-desc{ font-size:13px; color:var(--ink-soft); margin:-6px 0 14px 40px; }
+
+  .plain-card{ background:var(--card); border:1px solid var(--rule); border-radius:10px; padding:18px 20px; }
+  .col-label{ font-family:"Noto Serif SC"; font-weight:700; font-size:14px; margin-bottom:8px; display:inline-block; padding:2px 10px; border-radius:20px; background:var(--paper2); }
+
+  .callout{ display:flex; gap:10px; align-items:flex-start; background:#FBF1DE; border:1px solid rgba(189,138,52,.35); border-radius:10px; padding:12px 16px; font-size:13.5px; margin-bottom:18px; }
+  .callout .icon{ font-size:18px; }
+
+  /* format part labels */
+  .fmt-label{ display:inline-flex; align-items:baseline; gap:7px; background:var(--paper2); border-radius:6px; padding:4px 12px; margin:16px 0 8px; }
+  .fmt-label:first-child{ margin-top:0; }
+  .fmt-label-zh{ font-family:var(--zh-font); font-size:14px; font-weight:700; }
+  .fmt-label-en{ font-size:11px; color:var(--ink-soft); }
+  .fmt-legend{ display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; }
+  .fmt-legend .fmt-label{ margin:0; }
+
+  /* 稿纸 grid-paper */
+  .gz-block{ background:#FBF8F1; border:1px solid var(--rule); border-radius:6px; padding:16px; overflow-x:auto; margin-bottom:12px; }
+  .annotated-para{ display:flex; gap:10px; align-items:flex-start; }
+  .annotated-para .para-grid{ flex:1 1 auto; min-width:0; }
+  .annotated-para .para-note{ border-radius:8px; padding:10px 13px; font-size:12px; line-height:1.65; font-family:"Noto Sans SC",sans-serif; margin-top:2px; }
+  .annotated-para .para-note.echo{ flex:0 0 210px; background:#FBF1DE; border:1px solid rgba(189,138,52,.35); color:var(--ink-soft); }
+  .annotated-para .para-note.warn{ flex:0 0 210px; background:#FBEAE7; border:1px solid rgba(178,58,46,.35); color:var(--warn-red); }
+  .annotated-para .para-note.detail{ flex:0 0 68px; background:#EAF1EA; border:1px solid rgba(79,107,79,.35); color:var(--bamboo-dark); font-weight:700; text-align:center; padding:10px 4px; }
+  .annotated-para .para-note.brief{ flex:0 0 68px; background:#F1EFE9; border:1px solid var(--rule); color:var(--ink-soft); font-weight:700; text-align:center; padding:10px 4px; }
+  @media (max-width:780px){
+    .annotated-para .para-note.echo, .annotated-para .para-note.warn{ flex-basis:150px; font-size:11px; padding:8px 10px; }
+  }
+  .gz-grid{ display:inline-block; }
+  .gz-row{ display:grid; grid-template-columns:repeat(15,24px); }
+  .gz-cell{
+    width:24px; height:26px; border:1px solid var(--grid-line);
+    display:flex; align-items:center; justify-content:center;
+    font-family:var(--zh-font); font-size:14pt; box-sizing:border-box;
+  }
+  .gz-cell:nth-child(5n){ border-right:1px solid rgba(43,95,140,.32); }
+  .gz-cell.gz-ph{ opacity:.4; }
+  .gz-caption{ font-family:"Noto Sans SC",sans-serif; font-size:11.5px; color:var(--ink-soft); margin-top:8px; }
+  .question-card{ background:var(--card); border:1px solid var(--rule); border-radius:10px; padding:16px 20px; }
+  .question-meta{ font-family:"Noto Sans SC",sans-serif; font-size:12px; color:var(--ink-soft); line-height:1.9; margin-bottom:10px; padding-bottom:10px; border-bottom:1px dashed var(--rule); }
+  .question-body{ font-family:var(--zh-font); font-size:14pt; white-space:pre-line; line-height:1.9; }
+  .question-scenario{ font-family:var(--zh-font); font-size:14pt; line-height:1.9; }
+
+  /* phrase card (pinyin top / Chinese KaiTi / English bottom) */
+  .phrase-card{ background:var(--card); border:1px solid var(--rule); border-radius:8px; padding:12px 15px; margin-bottom:9px; }
+  .phrase-zh{ font-family:var(--zh-font); font-size:14pt; line-height:2.35; }
+  .phrase-en{ font-size:12px; color:var(--ink-soft); margin-top:6px; font-style:italic; }
+  .category.private .phrase-card{ border-left:3px solid var(--seal); }
+  .category.official .phrase-card{ border-left:3px solid var(--bamboo); }
+
+  .chip-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:10px; margin-bottom:14px; }
+  .phrase-chip{ background:var(--paper2); border:1px solid var(--rule); border-radius:10px; padding:9px 12px; text-align:center; }
+  .phrase-chip .phrase-zh{ font-size:13.5pt; line-height:1.9; }
+  .phrase-chip .phrase-en{ margin-top:5px; }
+
+  table.struct{ width:100%; border-collapse:collapse; font-size:13px; }
+  table.struct th, table.struct td{ border:1px solid var(--rule); padding:9px 10px; text-align:left; vertical-align:top; font-family:"Noto Sans SC",sans-serif; }
+  table.struct td.zh, table.struct th.zh{ font-family:var(--zh-font); font-size:14pt; }
+  table.struct th{ background:var(--paper2); font-weight:700; }
+
+  details.acc{ background:var(--card); border:1px solid var(--rule); border-radius:10px; margin-bottom:10px; overflow:hidden; }
+  details.acc summary{ list-style:none; cursor:pointer; padding:13px 16px; display:flex; align-items:center; justify-content:space-between; font-weight:700; font-size:15px; }
+  details.acc summary::-webkit-details-marker{ display:none; }
+  details.acc summary::after{ content:"+"; font-family:"Noto Sans SC"; font-weight:400; font-size:20px; color:var(--ink-soft); flex-shrink:0; margin-left:10px; }
+  details.acc[open] summary::after{ content:"–"; }
+  details.acc .acc-body{ padding:0 16px 16px; border-top:1px dashed var(--rule); padding-top:12px; }
+
+  /* ---- page 2 (作文): everything Chinese defaults to KaiTi 14pt, matching page 1 ---- */
+  #page-comp{ font-family:var(--zh-font); font-size:14pt; }
+  #page-comp .page-intro{ font-family:"Noto Sans SC",sans-serif; font-size:14.5px; }
+  #page-comp .block-head h2{ font-family:var(--zh-font); font-size:24px; margin:0; font-weight:700; }
+  #page-comp .block-num{ font-family:"Noto Serif SC"; font-weight:900; font-size:15px; color:#fff; background:var(--bamboo); width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  #page-comp .block-head{ display:flex; align-items:baseline; gap:12px; margin-bottom:14px; }
+  #page-comp .block-desc{ font-family:"Noto Sans SC",sans-serif; font-size:13.5px; color:var(--ink-soft); margin:-6px 0 16px 42px; }
+  #page-comp section.block{ margin-bottom:38px; }
+  #page-comp .grid-card{ background:var(--card); border:1px solid var(--rule); border-radius:10px; padding:20px; background-image:repeating-linear-gradient(0deg, transparent, transparent 22px, var(--grid-line) 22px, var(--grid-line) 23px), repeating-linear-gradient(90deg, transparent, transparent 22px, var(--grid-line) 22px, var(--grid-line) 23px); }
+  #page-comp .plain-card{ background:var(--card); border:1px solid var(--rule); border-radius:10px; padding:18px 20px; }
+  #page-comp table.struct{ width:100%; border-collapse:collapse; font-size:14pt; }
+  #page-comp table.struct th, #page-comp table.struct td{ border:1px solid var(--rule); padding:9px 10px; text-align:left; vertical-align:top; font-family:var(--zh-font); }
+  #page-comp table.struct th{ background:var(--paper2); font-weight:700; font-family:var(--zh-font); }
+  #page-comp details.acc summary{ font-family:var(--zh-font); font-size:16px; font-weight:700; }
+  #page-comp .emo-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:10px; }
+  #page-comp .emo-card summary{ font-size:16px; padding:11px 14px; }
+  #page-comp .emo-card .acc-body{ padding:0 14px 14px; }
+  #page-comp .example-block{ background:var(--paper2); border-left:4px solid var(--gold); border-radius:0 8px 8px 0; padding:14px 16px; font-size:14pt; margin-top:10px; white-space:pre-line; }
+  #page-comp .topic-year{ font-family:"Noto Sans SC",sans-serif; display:inline-block; background:var(--bamboo); color:#fff; font-size:11.5px; font-weight:700; padding:2px 8px; border-radius:5px; flex-shrink:0; margin-top:3px; }
+  #page-comp .topic-item{ display:flex; align-items:flex-start; gap:10px; padding:10px 0; border-bottom:1px dotted var(--rule); }
+  #page-comp .topic-item:last-child{ border-bottom:none; }
+  #page-comp .gz-caption{ font-family:"Noto Sans SC",sans-serif; }
+
+  footer{ text-align:center; color:var(--ink-soft); font-size:12.5px; padding:30px 20px 10px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="eyebrow">中三高级华文 · Sec 3 Higher Chinese</div>
+  <h1>高华快线<span class="accent-underline"></span></h1>
+  <div class="sub">试卷一总复习 · 电邮写作 与 作文写作，一站备齐</div>
+  <div class="stamp-mark">复习</div>
+</header>
+
+<nav class="tabbar">
+  <button class="tab-btn active" data-target="email">
+    <span class="tab-seal">电</span>
+    <span class="tab-label">电邮 Email</span>
+  </button>
+  <button class="tab-btn" data-target="comp">
+    <span class="tab-seal">作</span>
+    <span class="tab-label">作文 Composition</span>
+  </button>
+</nav>
+
+<main>
+
+  <!-- ============================================================ -->
+  <!-- PAGE 1 :: 电邮 -->
+  <!-- ============================================================ -->
+  <section class="page active" data-page="email" id="page-email">
+    <p class="page-intro">私人电邮（回复类）与公务电邮（反映类 / 表扬类）——分开复习，格式、题目与范文一次看清楚。</p>
+
+    <nav class="subtabbar">
+      <button class="subtab-btn active" data-subtarget="private">私人电邮</button>
+      <button class="subtab-btn" data-subtarget="official">公务电邮</button>
+    </nav>
+
+    <!-- ================= 私人电邮 ================= -->
+    <div class="subpage active" data-subpage="private">
+    <div class="category private">
+      <div class="category-head">
+        <div class="category-badge">私</div>
+        <div><h2>私人电邮</h2><span class="en-cap">Private / Personal Email &nbsp;·&nbsp; 回复类 Reply</span></div>
+      </div>
+      <div class="category-rule"></div>
+
+      <section class="block">
+        <div class="block-head"><span class="block-num">1</span><h3>格式（模板）</h3></div>
+        <div class="block-desc">Format template — fill in the blanks marked ○</div>
+        <div id="private-format"></div>
+      </section>
+
+      <section class="block">
+        <div class="block-head"><span class="block-num">2</span><h3>题目与范文</h3></div>
+        <div class="block-desc">根据以下电子邮件的内容，写一个电邮给对方</div>
+        <div id="private-question"></div>
+        <div class="block-desc" style="margin-top:18px;">范文</div>
+        <div id="private-example"></div>
+      </section>
+    </div>
+    </div>
+
+    <!-- ================= 公务电邮 ================= -->
+    <div class="subpage" data-subpage="official">
+    <div class="category official">
+      <div class="category-head">
+        <div class="category-badge">公</div>
+        <div><h2>公务电邮</h2><span class="en-cap">Official / Formal Email &nbsp;·&nbsp; 反映类 Complaint &amp; 表扬类 Praise</span></div>
+      </div>
+      <div class="category-rule"></div>
+
+      <section class="block">
+        <div class="block-head"><span class="block-num">1</span><h3>格式（模板）</h3></div>
+        <div class="block-desc">Format template — fill in the blanks marked ○</div>
+        <div id="official-format"></div>
+        <div class="callout"><span class="icon">💡</span><span><b>关键差别：</b>私人电邮结尾用「祝好！」+ 姓名；公务电邮结尾直接用「姓名 + 启」，不需要「祝好！」。</span></div>
+      </section>
+
+      <section class="block">
+        <div class="block-head"><span class="block-num">2</span><h3>内容要点</h3></div>
+        <div id="official-structure"></div>
+      </section>
+
+      <section class="block">
+        <div class="block-head"><span class="block-num">3</span><h3>好词好句</h3></div>
+        <div id="official-accordions"></div>
+      </section>
+
+      <section class="block">
+        <div class="block-head"><span class="block-num">4</span><h3>题目与范文</h3></div>
+        <div id="official-question"></div>
+        <div class="block-desc" style="margin-top:18px;">范文</div>
+        <div id="official-example"></div>
+      </section>
+    </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- PAGE 2 :: 作文 -->
+  <!-- ============================================================ -->
+  <section class="page" data-page="comp" id="page-comp">
+    <p class="page-intro">情境作文、议论文与材料作文的结构、写作技巧与好词好句。</p>
+
+    <nav class="subtabbar">
+      <button class="subtab-btn active" data-subtarget="qingjing">情境作文</button>
+      <button class="subtab-btn" data-subtarget="yilun">议论文</button>
+      <button class="subtab-btn" data-subtarget="cailiao">材料作文</button>
+    </nav>
+
+    <div class="subpage active" data-subpage="qingjing">
+      <section class="block">
+        <div class="block-head"><span class="block-num">Q3</span><h2>情境作文（记叙文）</h2></div>
+        <div class="block-desc">开头法（Introduction）—— 点击展开范例</div>
+        <div id="q4-openings"></div>
+        <div class="block-desc" style="margin-top:18px;">结尾法（Ending）</div>
+        <div id="q4-endings"></div>
+      </section>
+
+      <section class="block">
+        <div class="block-head"><span class="block-num">技</span><h2>人物描写手法</h2></div>
+        <div class="block-desc">让人物"活起来"的四种描写手法 —— 外貌、行动、语言、心理</div>
+        <div id="char-techniques"></div>
+      </section>
+
+      <section class="block">
+        <div class="block-head"><span class="block-num">6</span><h2>心情描写好词好句</h2></div>
+        <div class="block-desc">点击情绪分类展开对应的好句</div>
+        <div class="emo-grid" id="emotion-grid"></div>
+      </section>
+
+      <section class="block">
+        <div class="block-head"><span class="block-num">Q3</span><h2>题目与范文</h2></div>
+        <div id="qingjing-question"></div>
+        <div class="block-desc" style="margin-top:18px;">范文</div>
+        <div id="qingjing-example"></div>
+      </section>
+    </div>
+
+    <div class="subpage" data-subpage="yilun">
+      <section class="block">
+        <div class="block-head"><span class="block-num">Q4</span><h2>议论文</h2></div>
+        <div class="block-desc">结构：引论 → 本论（PEEL）→ 结论</div>
+        <div class="grid-card">
+          <table class="struct" id="q3-table"></table>
+        </div>
+      </section>
+
+      <section class="block">
+        <div class="block-head"><span class="block-num">论</span><h2>论据</h2></div>
+        <div class="block-desc">事实论据（举例论证）与名言名句（引用论证）—— 点击展开</div>
+        <div class="col-label">事实论据</div>
+        <div id="lunju-facts" style="margin-top:8px;"></div>
+        <div class="col-label" style="margin-top:16px;">名言名句</div>
+        <div id="lunju-quotes" style="margin-top:8px;"></div>
+      </section>
+
+      <section class="block">
+        <div class="block-head"><span class="block-num">Q4</span><h2>题目与范文</h2></div>
+        <div id="yilun-question"></div>
+        <div class="block-desc" style="margin-top:18px;">范文</div>
+        <div id="yilun-example"></div>
+      </section>
+    </div>
+
+    <div class="subpage" data-subpage="cailiao">
+      <section class="block">
+        <div class="block-head"><span class="block-num">Q5</span><h2>材料作文（如何类）写作结构</h2></div>
+        <div class="block-desc">论说类：如何……</div>
+        <div class="grid-card">
+          <table class="struct" id="cailiao-ruhe-table"></table>
+        </div>
+      </section>
+
+      <section class="block">
+        <div class="block-head"><span class="block-num">Q5</span><h2>材料作文（议论类）写作结构</h2></div>
+        <div class="block-desc">议论类：分析利与弊／好处／影响／提出看法</div>
+        <div class="grid-card">
+          <table class="struct" id="cailiao-yilun-table"></table>
+        </div>
+      </section>
+
+      <section class="block">
+        <div class="block-head"><span class="block-num">Q5</span><h2>题目与范文</h2></div>
+        <div id="cailiao-question"></div>
+        <div class="block-desc" style="margin-top:18px;">范文</div>
+        <div id="cailiao-example"></div>
+      </section>
+    </div>
+  </section>
+
+</main>
+
+<footer>高华快线 · 试卷一温习站 &nbsp;|&nbsp; 内容整理自课堂复习手册，考前冲刺加油 💪</footer>
+
+<script>
+/* ---------------- TAB SWITCHING ---------------- */
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const target = btn.dataset.target === 'email' ? 'email' : 'comp';
+    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+    document.getElementById(target==='email' ? 'page-email' : 'page-comp').classList.add('active');
+    window.scrollTo({top:0, behavior:'smooth'});
+  });
+});
+
+/* ---------------- SUB-TAB SWITCHING (scoped per page, so page-1 and page-2 sub-tabs stay independent) ---------------- */
+document.querySelectorAll('.subtab-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const page = btn.closest('.page');
+    page.querySelectorAll('.subtab-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const target = btn.dataset.subtarget;
+    page.querySelectorAll('.subpage').forEach(p=>p.classList.remove('active'));
+    page.querySelector(`.subpage[data-subpage="${target}"]`).classList.add('active');
+    window.scrollTo({top:0, behavior:'smooth'});
+  });
+});
+
+/* ---------------- GENERIC HELPERS ---------------- */
+function el(tag, cls, html){ const e=document.createElement(tag); if(cls) e.className=cls; if(html!==undefined) e.innerHTML=html; return e; }
+function accordion(title, bodyHTML, extraClass){
+  const d = el('details','acc'+(extraClass?' '+extraClass:''));
+  d.appendChild(el('summary', null, title));
+  d.appendChild(el('div','acc-body', bodyHTML));
+  return d;
+}
+
+/* pinyin annotator: "你(nǐ)的(de)" -> <ruby>你<rt>nǐ</rt></ruby><ruby>的<rt>de</rt></ruby> ; plain chars pass through */
+function pyAnnotate(str){
+  let html=''; let i=0;
+  while(i<str.length){
+    const ch = str[i];
+    if(str[i+1]==='('){
+      const close = str.indexOf(')', i+1);
+      html += ch;
+      i = close+1;
+    } else { html += ch; i++; }
+  }
+  return html;
+}
+/* phrase card: plain Chinese text, no pinyin/English */
+function phraseCard(zhWithPy, en){
+  return `<div class="phrase-card"><div class="phrase-zh">${pyAnnotate(zhWithPy)}</div></div>`;
+}
+function phraseCards(list){ return list.map(([zh,en])=>phraseCard(zh,en)).join(''); }
+function chipGrid(list){
+  return '<div class="chip-grid">' + list.map(([zh,en])=>
+    `<div class="phrase-chip"><div class="phrase-zh">${pyAnnotate(zh)}</div></div>`
+  ).join('') + '</div>';
+}
+function pinyinChips(list){
+  return '<div class="chip-grid">' + list.map(zh=>
+    `<div class="phrase-chip"><div class="phrase-zh">${pyAnnotate(zh)}</div></div>`
+  ).join('') + '</div>';
+}
+function twoCol(labelA, contentA, labelB, contentB){
+  return `<div class="two-col"><div><span class="col-label">${labelA}</span><div class="example-block" style="margin-top:6px;">${contentA}</div></div><div><span class="col-label">${labelB}</span><div class="example-block" style="margin-top:6px;">${contentB}</div></div></div>`;
+}
+function fmtLabel(zhWithPy, en){ return `<div class="fmt-label"><span class="fmt-label-zh">${pyAnnotate(zhWithPy)}</span></div>`; }
+
+
+/* ---------------- 稿纸 (grid paper) renderer ---------------- */
+const GZ_COLS = 15;
+function padRow(str){ const arr = Array.from(str); while(arr.length<GZ_COLS) arr.push(' '); return arr.slice(0,GZ_COLS); }
+function cellsHTML(chars){ return chars.map(c=>`<div class="gz-cell${c==='。'||c==='○'?' gz-ph':''}">${c===' '?'':c}</div>`).join(''); }
+/* template mode: exact fixed rows, e.g. subject line / salutation / signature */
+function gzTemplate(rows){
+  let html = '<div class="gz-block"><div class="gz-grid">';
+  rows.forEach(r=> html += `<div class="gz-row">${cellsHTML(padRow(r))}</div>` );
+  html += '</div></div>';
+  return html;
+}
+/* flow mode: full paragraphs, auto-indent 2 spaces, auto-wrap at GZ_COLS */
+function gzFlow(text){
+  let allRows = [];
+  text.split('\n').forEach(para=>{
+    if(para.trim()==='') return;
+    let chars = [' ',' ', ...Array.from(para)];
+    let idx=0;
+    while(idx<chars.length){
+      allRows.push(padRow(chars.slice(idx, idx+GZ_COLS).join('')));
+      idx += GZ_COLS;
+    }
+  });
+  let html = '<div class="gz-block"><div class="gz-grid">';
+  allRows.forEach(r=> html += `<div class="gz-row">${cellsHTML(r)}</div>` );
+  html += '</div></div>';
+  return html;
+}
+
+/* letter mode: array of {text, indent}. indent:false lines (subject/salutation/signature) are flush-left; indent:true (default) lines get the usual 2-space paragraph indent */
+function gzLetterFlow(paragraphs){
+  let allRows = [];
+  paragraphs.forEach(p=>{
+    const indent = p.indent !== false;
+    let chars = indent ? [' ',' ', ...Array.from(p.text)] : Array.from(p.text);
+    let idx=0;
+    while(idx<chars.length){
+      allRows.push(padRow(chars.slice(idx, idx+GZ_COLS).join('')));
+      idx += GZ_COLS;
+    }
+  });
+  let html = '<div class="gz-block"><div class="gz-grid">';
+  allRows.forEach(r=> html += `<div class="gz-row">${cellsHTML(r)}</div>` );
+  html += '</div></div>';
+  return html;
+}
+/* render one paragraph on 稿纸, optionally with a side note ('echo' = 呼应材料, 'warn' = 提醒/caution) */
+function gzPara(text, note, noteType){
+  const grid = `<div class="para-grid">${gzLetterFlow([{text}])}</div>`;
+  if(!note) return grid;
+  return `<div class="annotated-para">${grid}<div class="para-note ${noteType||'echo'}">${note}</div></div>`;
+}
+const privFmtWrap = document.getElementById('private-format');
+privFmtWrap.appendChild(el('div', null, gzTemplate([
+  '主题：回复：○○○○○○○○',
+  '',
+  '○○：',
+  '。。。。。。。。。。。。。。。',
+  '。。。。。。。。。。。。。。。',
+  '',
+  '　　祝好！',
+  '',
+  '○○'
+])));
+const privLegend = el('div','fmt-legend');
+privLegend.innerHTML =
+  fmtLabel('主(zhǔ)题(tí)','Subject') +
+  fmtLabel('称(chēng)呼(hu)','Salutation — friend\'s name') +
+  fmtLabel('正(zhèng)文(wén)','Body') +
+  fmtLabel('结(jié)束(shù)语(yǔ)','Closing — always 祝好！') +
+  fmtLabel('署(shǔ)名(míng)','Signature — your name, no 启');
+privFmtWrap.appendChild(privLegend);
+
+/* ================================================================ */
+/* OFFICIAL EMAIL FORMAT TEMPLATE                                    */
+/* ================================================================ */
+const offFmtWrap = document.getElementById('official-format');
+offFmtWrap.appendChild(el('div', null, gzTemplate([
+  '主题：○○○○○○○○○○',
+  '',
+  '○○○：',
+  '。。。。。。。。。。。。。。。',
+  '。。。。。。。。。。。。。。。',
+  '',
+  '○○○　启'
+])));
+const offLegend = el('div','fmt-legend');
+offLegend.innerHTML =
+  fmtLabel('主(zhǔ)题(tí)','Subject') +
+  fmtLabel('称(chēng)呼(hu)','Salutation — recipient\'s title/position') +
+  fmtLabel('正(zhèng)文(wén)','Body') +
+  fmtLabel('署(shǔ)名(míng)','Signature — your name + 启 (no 祝好！)');
+offFmtWrap.appendChild(offLegend);
+
+/* ================================================================ */
+/* CONTENT-POINT TABLES (official) — 表扬类／反映类／请求类, with 分数  */
+/* ================================================================ */
+const officialStructWrap = document.getElementById('official-structure');
+
+officialStructWrap.appendChild(accordion('（一）表扬类', `
+<table class="struct">
+  <tr><th>提纲</th><th class="zh">表扬（人）</th><th class="zh">表扬（活动／计划／节目等）</th><th>分数</th></tr>
+  <tr><td>开头段</td>
+    <td class="zh" colspan="2"><b>表明身份＋写电邮目的</b><br><i>e.g. 本人是一名（居民／学生……），写这电邮的目的是……</i></td>
+    <td>1</td></tr>
+  <tr><td rowspan="2">主要内容</td>
+    <td class="zh"><b>交代详情＋举例子＋影响</b><br>1. 表扬什么人？（写出姓名）<br>2. 她／他在什么地方、什么时间做了什么好事？举例说明<br>3. 她／他的行为有什么良好的影响？（2个）</td>
+    <td class="zh"><b>交代详情＋举例子＋影响</b><br>1. 表扬什么活动／计划／节目等？——写出活动／计划等的名称、目的等；注明详情：什么地方、时间等<br>2. 有哪些值得表扬的地方？举例说明<br>3. 这些值得表扬的地方有什么良好的影响？（2个）</td>
+    <td>4</td></tr>
+  <tr>
+    <td class="zh"><b>如何表扬她／他？</b><br>• 建议一<br>• 建议二<br>＊须要说明作用</td>
+    <td class="zh"><b>如何将活动／计划／节目等做得更好？</b><br>• 建议一<br>• 建议二<br>＊须要说明作用</td>
+    <td>4</td></tr>
+  <tr><td>结束段</td>
+    <td class="zh"><u>表扬人</u><br>素闻您……（恭维话）。希望您能表扬……谢谢！</td>
+    <td class="zh"><u>表扬活动／计划／节目等</u><br>素闻您……（恭维话）。希望您能采纳本人的建议，让活动／计划／节目做得更好。谢谢！</td>
+    <td>1</td></tr>
+</table>
+`));
+
+officialStructWrap.appendChild(accordion('（二）反映类', `
+<table class="struct">
+  <tr><th>提纲</th><th class="zh">电邮主要内容</th><th>分数</th></tr>
+  <tr><td>开头段</td><td class="zh">（1）<b>表明身份＋写电邮目的</b><br>我／本人是……，写此电邮的目的是……。</td><td>1</td></tr>
+  <tr><td rowspan="2">主要内容</td>
+    <td class="zh">（2）<b>详细说明现在的情况，并点出问题</b>（5W1H）<br>（3）<b>说明问题带来的影响</b>（根据题目）<br>• 说明问题（一）＋问题带来的影响<br>• 说明问题（二）＋问题带来的影响</td>
+    <td>4</td></tr>
+  <tr>
+    <td class="zh">（4）<b>提出改善问题的建议</b>（2个，详写）<br>• 提出改善问题（一）的建议＋说明<br>• 提出改善问题（二）的建议＋说明</td>
+    <td>4</td></tr>
+  <tr><td>结束段</td>
+    <td class="zh">（5）<b>恭维话／客气话</b>（2句）<br>（6）<b>提出希望此问题得到解决，并致谢</b></td>
+    <td>1</td></tr>
+</table>
+`));
+
+officialStructWrap.appendChild(accordion('（三）请求类', `
+<table class="struct">
+  <tr><th>提纲</th><th class="zh">电邮主要内容</th><th>分数</th></tr>
+  <tr><td>开头段</td><td class="zh">（1）表明身份＋写电邮的目的</td><td>1</td></tr>
+  <tr><td rowspan="2">主要内容</td>
+    <td class="zh">（2）<b>提出请求，说明理由</b><br>• 请求对方做些什么（e.g. 举办活动／赞助活动），需提供相关的信息（例如日期、时间、地点、举办目的、赞助什么等）<br>• 说明提出请求的原因</td>
+    <td>4</td></tr>
+  <tr>
+    <td class="zh">（3）根据题目，说明其他情况或提出建议<br>如果题目要求提出建议：<br>• 建议（一）＋说明意义（建议会带来的好处）<br>• 建议（二）＋说明意义（建议会带来的好处）</td>
+    <td>4</td></tr>
+  <tr><td>结束段</td>
+    <td class="zh">恭维话＋请考虑本人的请求，尽早……（做什么）＋谢谢！</td>
+    <td>1</td></tr>
+</table>
+`));
+
+/* ================================================================ */
+/* OFFICIAL EMAIL PHRASES                                            */
+/* ================================================================ */
+const officialWrap = document.getElementById('official-accordions');
+
+officialWrap.appendChild(accordion('表明身份、写电邮目的', phraseCards([
+  ['本(běn)人(rén)是(shì)本(běn)校(xiào)的(de)学(xué)生(shēng)，就(jiù)读(dú)于(yú)四(sì)甲(jiǎ)班(bān)，此(cǐ)次(cì)致(zhì)函(hán)是(shì)为(wèi)了(le)……','I am a student of this school, in Class 4A. I am writing this email to ...'],
+  ['本(běn)人(rén)是(shì)本(běn)区(qū)居(jū)民(mín)，此(cǐ)次(cì)致(zhì)函(hán)是(shì)为(wèi)了(le)……','I am a resident of this district, and I am writing to ...'],
+  ['我(wǒ)是(shì)贵(guì)公(gōng)司(sī)的(de)一(yì)名(míng)顾(gù)客(kè)／搭(dā)客(kè)，此(cǐ)次(cì)致(zhì)函(hán)是(shì)为(wèi)了(le)……','I am a customer/passenger of your company, and I am writing this email to ...']
+])));
+
+officialWrap.appendChild(accordion('恭维（客气话）', chipGrid([
+  ['办(bàn)事(shì)效(xiào)率(lǜ)高(gāo)','efficient in handling matters'],
+  ['从(cóng)善(shàn)如(rú)流(liú)','readily accepts good advice'],
+  ['尽(jìn)心(xīn)尽(jìn)力(lì)','wholehearted effort'],
+  ['关(guān)注(zhù)居(jū)民(mín)的(de)生(shēng)活(huó)','cares about residents\' lives'],
+  ['关(guān)心(xīn)学(xué)生(shēng)','cares about students'],
+  ['乐(lè)于(yú)为(wèi)顾(gù)客(kè)服(fú)务(wù)','happy to serve customers']
+])));
+
+officialWrap.appendChild(accordion('结束语', phraseCards([
+  ['相(xiāng)信(xìn)您(nín)必(bì)定(dìng)会(huì)尽(jǐn)快(kuài)采(cǎi)取(qǔ)适(shì)当(dàng)的(de)行(xíng)动(dòng)。','I believe you will surely take appropriate action soon.'],
+  ['希(xī)望(wàng)您(nín)能(néng)考(kǎo)虑(lǜ)本(běn)人(rén)所(suǒ)提(tí)出(chū)的(de)建(jiàn)议(yì)。','I hope you will consider the suggestions I have made.'],
+  ['希(xī)望(wàng)您(nín)能(néng)好(hǎo)好(hǎo)表(biǎo)扬(yáng)她(tā)。','I hope you will give her proper recognition.']
+])));
+
+officialWrap.appendChild(accordion('反映用语（词汇＋句子）',
+  chipGrid([
+    ['态(tài)度(dù)恶(è)劣(liè)／欠(qiàn)佳(jiā)','poor / unsatisfactory attitude'],
+    ['变(biàn)本(běn)加(jiā)厉(lì)','getting worse and worse'],
+    ['缺(quē)乏(fá)公(gōng)德(dé)心(xīn)','lacking public-spiritedness'],
+    ['有(yǒu)碍(ài)市(shì)容(róng)','harms the city\'s appearance'],
+    ['污(wū)染(rǎn)环(huán)境(jìng)','pollutes the environment'],
+    ['危(wēi)害(hài)他(tā)人(rén)的(de)健(jiàn)康(kāng)','endangers others\' health'],
+    ['威(wēi)胁(xié)居(jū)民(mín)的(de)安(ān)全(quán)','threatens residents\' safety'],
+    ['妨(fáng)碍(ài)公(gōng)共(gòng)卫(wèi)生(shēng)','hinders public hygiene'],
+    ['为(wèi)居(jū)民(mín)的(de)生(shēng)活(huó)带(dài)来(lái)不(bú)便(biàn)','causes inconvenience to residents']
+  ]) +
+  phraseCards([
+    ['这(zhè)种(zhǒng)完(wán)全(quán)不(bù)为(wèi)他(tā)人(rén)着(zhuó)想(xiǎng)的(de)行(xíng)为(wéi)，真(zhēn)叫(jiào)人(rén)忍(rěn)无(wú)可(kě)忍(rěn)。','Such behaviour, which shows no consideration for others, is truly unbearable.'],
+    ['这(zhè)影(yǐng)响(xiǎng)我(wǒ)国(guó)"花(huā)园(yuán)城(chéng)市(shì)"的(de)美(měi)称(chēng)，破(pò)坏(huài)环(huán)境(jìng)的(de)清(qīng)洁(jié)与(yǔ)美(měi)观(guān)。','This affects our country\'s reputation as a "Garden City" and damages the cleanliness of the environment.'],
+    ['这(zhè)种(zhǒng)情(qíng)况(kuàng)已(yǐ)持(chí)续(xù)几(jǐ)个(gè)月(yuè)，而(ér)且(qiě)越(yuè)来(lái)越(yuè)严(yán)重(zhòng)／每(měi)况(kuàng)愈(yù)下(xià)。','This situation has continued for months and is getting worse / going from bad to worse.']
+  ])
+));
+
+officialWrap.appendChild(accordion('表扬用语（词汇＋句子）',
+  chipGrid([
+    ['热(rè)心(xīn)助(zhù)人(rén)','warm-hearted and helpful'],
+    ['值(zhí)得(dé)嘉(jiā)奖(jiǎng)','deserves commendation'],
+    ['表(biǎo)达(dá)谢(xiè)意(yì)','express gratitude'],
+    ['尽(jìn)心(xīn)尽(jìn)力(lì)','wholehearted effort'],
+    ['值(zhí)得(dé)学(xué)习(xí)','worth learning from'],
+    ['公(gōng)开(kāi)表(biǎo)扬(yáng)','publicly praise'],
+    ['态(tài)度(dù)友(yǒu)善(shàn)','friendly attitude'],
+    ['深(shēn)受(shòu)感(gǎn)动(dòng)','deeply moved'],
+    ['树(shù)立(lì)良(liáng)好(hǎo)榜(bǎng)样(yàng)','sets a good example'],
+    ['服(fú)务(wù)周(zhōu)到(dào)','attentive service'],
+    ['笑(xiào)脸(liǎn)盈(yíng)盈(yíng)','beaming smile'],
+    ['待(dài)人(rén)有(yǒu)礼(lǐ)','polite to others'],
+    ['不(bú)厌(yàn)其(qí)烦(fán)','patient, never impatient'],
+    ['是(shì)所(suǒ)有(yǒu)人(rén)的(de)楷(kǎi)模(mó)','a role model for everyone']
+  ]) +
+  phraseCards([
+    ['他(tā)的(de)＿＿，使(shǐ)我(wǒ)非(fēi)常(cháng)感(gǎn)动(dòng)，给(gěi)我(wǒ)留(liú)下(xià)深(shēn)刻(kè)的(de)印(yìn)象(xiàng)。','His/her ___ moved me deeply and left a strong impression on me.'],
+    ['这(zhè)种(zhǒng)优(yōu)良(liáng)的(de)服(fú)务(wù)态(tài)度(dù)是(shì)非(fēi)常(cháng)难(nán)得(dé)的(de)／是(shì)不(bù)可(kě)多(duō)得(dé)的(de)。','This kind of excellent service attitude is very rare / hard to come by.'],
+    ['他(tā)的(de)服(fú)务(wù)态(tài)度(dù)良(liáng)好(hǎo)、工(gōng)作(zuò)效(xiào)率(lǜ)也(yě)很(hěn)高(gāo)，而(ér)且(qiě)很(hěn)有(yǒu)耐(nài)心(xīn)地(de)解(jiě)答(dá)了(le)我(wǒ)的(de)诸(zhū)多(duō)疑(yí)问(wèn)。','His/her service attitude was good, efficiency high, and patiently answered all my questions.'],
+    ['他(tā)的(de)服(fú)务(wù)真(zhēn)是(shì)尽(jìn)善(shàn)尽(jìn)美(měi)，是(shì)服(fú)务(wù)业(yè)工(gōng)作(zuò)者(zhě)的(de)榜(bǎng)样(yàng)。','His/her service was truly impeccable, a role model for service workers.']
+  ])
+));
+
+officialWrap.appendChild(accordion('提出建议（词汇＋句子）',
+  chipGrid([
+    ['张(zhāng)贴(tiē)海(hǎi)报(bào)','put up posters'],
+    ['公(gōng)开(kāi)表(biǎo)扬(yáng)','publicly praise'],
+    ['实(shí)施(shī)罚(fá)款(kuǎn)','implement fines'],
+    ['安(ān)排(pái)人(rén)手(shǒu)巡(xún)逻(luó)','arrange staff to patrol'],
+    ['举(jǔ)办(bàn)讲(jiǎng)座(zuò)','hold a talk / seminar'],
+    ['安(ān)装(zhuāng)闭(bì)路(lù)电(diàn)视(shì)／电(diàn)眼(yǎn)','install CCTV / security cameras']
+  ]) +
+  phraseCards([
+    ['以(yǐ)下(xià)是(shì)本(běn)人(rén)的(de)一(yì)些(xiē)建(jiàn)议(yì)，供(gōng)您(nín)参(cān)考(kǎo)：','Below are some suggestions from me, for your reference:'],
+    ['希(xī)望(wàng)您(nín)能(néng)考(kǎo)虑(lǜ)我(wǒ)以(yǐ)下(xià)的(de)建(jiàn)议(yì)。','I hope you will consider the following suggestions of mine.'],
+    ['我(wǒ)恳(kěn)请(qǐng)您(nín)派(pài)人(rén)前(qián)来(lái)，对(duì)于(yú)此(cǐ)情(qíng)况(kuàng)进(jìn)行(xíng)观(guān)察(chá)与(yǔ)了(liǎo)解(jiě)。','I earnestly request that you send someone to observe and understand this situation.'],
+    ['请(qǐng)发(fā)出(chū)一(yí)个(gè)通(tōng)告(gào)，劝(quàn)请(qǐng)居(jū)民(mín)合(hé)作(zuò)。','Please issue a notice urging residents to cooperate.'],
+    ['在(zài)此(cǐ)建(jiàn)议(yì)贵(guì)局(jú)安(ān)装(zhuāng)闭(bì)路(lù)电(diàn)视(shì)／电(diàn)眼(yǎn)，监(jiān)视(shì)这(zhè)里(lǐ)的(de)动(dòng)静(jìng)。','I suggest your department install CCTV here to monitor activity.'],
+    ['希(xī)望(wàng)您(nín)能(néng)提(tí)醒(xǐng)员(yuán)工(gōng)，请(qǐng)他(tā)们(men)以(yǐ)顾(gù)客(kè)的(de)利(lì)益(yì)为(wèi)先(xiān)，改(gǎi)善(shàn)服(fú)务(wù)态(tài)度(dù)。','I hope you can remind staff to put customers first and improve their service attitude.']
+  ])
+));
+
+/* ================================================================ */
+/* 题目 — the given exam prompt                                      */
+/* ================================================================ */
+const privQWrap = document.getElementById('private-question');
+privQWrap.appendChild(el('div','question-card', `
+  <div class="question-meta">发件人：lixiaojun@kmail.com<br>收件人：wumeiyi@kmail.com<br>日期：2025年9月24日<br>主题：请提供建议</div>
+  <div class="question-body">美仪：
+
+你好！好久不见，别来无恙？
+最近在新加坡，直播带货成了新的销售趋势。只要打开手机，就能看到主播在镜头前展示产品、实时互动，还常常用限时优惠吸引观众下单。
+我的妈妈最近迷上了直播购物，几乎每天都会下单。结果，家里快递包裹堆积如山。你对直播购物有什么看法？你觉得消费者在购买时应该注意些什么？
+期待早日收到你的回复。
+祝好！
+
+小君</div>
+`));
+
+const offQWrap = document.getElementById('official-question');
+offQWrap.appendChild(el('div','question-card', `
+  <p class="question-scenario">你的学校最近举办了一个"预防骨痛热症"(Stamp Out Dengue) 的活动。在这个活动中，中三的学生走访社区每家每户，向居民宣传如何预防伊蚊滋生，提升大家对骨痛热症的防范意识，也发挥了关心社会的精神。</p>
+  <p class="question-scenario" style="margin-top:10px;">假设你是居民林子杰，写一个电邮给校长王忠明，对这次活动给予表扬，并提供一些建议，进一步提升这个活动的效果。</p>
+`));
+
+/* ================================================================ */
+/* 范文 — full sample essays rendered on 稿纸                        */
+/* ================================================================ */
+const privateExampleParas = [
+  {text:'主题：回复：请提供建议', indent:false},
+  {text:'小君：', indent:false},
+  {text:'你好！很高兴收到你的电邮。好久不见，你提到的直播购物这个话题我也很感兴趣，今天就来跟你分享一下我的看法，以及消费者购买时应该注意的地方。'},
+  {text:'你在电邮中提到你的妈妈迷上了直播购物，买了很多物品。我认为直播购物有利也有弊。先说说好处，主播的互动和推荐能提高购物的信任感与趣味性。因为消费者可以直接在直播中看到产品的实际效果，还能即时向主播提问，减少了网购"看不到实物"的疑虑。比如说，主播一边试用产品，一边解答观众的问题，让人感觉就像有个朋友在帮忙挑选商品，而不是单纯看着冷冰冰的商品页面。因此，我认为这是直播购物值得肯定的一面。'},
+  {text:'不过，直播购物也容易导致冲动消费。因为主播常常营造紧张的抢购气氛，配合限时优惠，让消费者来不及冷静思考，就仓促下单。就像你提到的，妈妈几乎每天都在直播间下单，结果家里快递包裹堆积如山，其实当中不少可能都是一时冲动买下、根本不需要的东西。长期这样下去，不仅浪费金钱，也造成不必要的浪费。'},
+  {text:'至于消费者在购买时应该注意的事项，第一，购买前不要被直播间的促销气氛和限时折扣冲昏头脑。因为主播营造的紧张感容易让人失去理智判断，做出冲动的决定。比如说，下单前不妨先把商品加入购物车，给自己十分钟冷静的时间，问问自己是否真的需要这样商品，而不是急着抢购。这样才能避免买到不需要或用不上的东西。'},
+  {text:'第二，购买前应该多留意产品的细节，并查看其他买家的评价和反馈。因为有些主播为了促销，可能会夸大产品的效果，若不多加查证，容易买到不符合预期的商品。比如说，可以在下单前到其他购物平台搜索同款商品的评价，或参考其他买家上传的实际使用照片，作为判断依据。这样才能更准确地判断产品是否物有所值，避免日后后悔。'},
+  {text:'好了，就先写到这里，希望我的分享能帮到你和你妈妈！'},
+  {text:'祝好！'},
+  {text:'美仪', indent:false}
+];
+
+const privExWrap = document.getElementById('private-example');
+privExWrap.appendChild(el('div', null, gzLetterFlow(privateExampleParas)));
+
+const officialExampleParas = [
+  {text:'主题：表扬"预防骨痛热症"活动', indent:false},
+  {text:'王校长：', indent:false},
+  {text:'您好！我是居住在本区的居民林子杰。今天写这封电邮是想对贵校最近举办的"预防骨痛热症"活动表示赞赏，并提供一些建议，希望能让这项活动办得更加完善。'},
+  {text:'这次活动中，贵校中三学生挨家挨户上门宣传，向居民派发扇子、宣传册和纸巾等小礼物，还现场进行简单的问答，让居民在轻松的气氛中学习防蚊知识，这种做法让我十分敬佩。'},
+  {text:'首先，这项活动大大提升了居民对骨痛热症的防范意识。透过学生耐心的讲解和现场问答，居民不仅记住了预防伊蚊滋生的方法，也更清楚骨痛热症可能带来的严重后果，因此更愿意主动清理住家周围的积水。其次，这项活动也充分体现了学生关心社会的精神。学生们利用假期时间，走入社区服务居民，展现了应有的社会责任感，值得嘉奖。'},
+  {text:'在此，我有两项建议，供贵校参考。第一，我留意到学生上门宣传时，很多居民都不在家，导致宣传效果打了折扣。建议贵校在活动前三天，通过社区公告栏或社区群组提前告知居民活动的时间，让大家有所准备，这样应该能提高开门率。'},
+  {text:'第二，建议贵校鼓励学生除了口头分享，也可以发挥创意，制作影片，发到社群群组，加强活动的宣传效果。因为现在的中学生大多善于拍摄和剪辑短片，制作影片不仅操作简便，还能让宣传内容更加生动有趣，让平时较少留意海报或口头宣传的居民，也能透过社群媒体接触到相关信息。比如说，学生可以把走访居民、讲解防蚊知识的过程拍摄下来，剪辑成简短有趣的短片，配上字幕和音乐，上传到面簿或抖音等社群平台，让更多人看到这次活动的意义。这样一来，不仅能加强宣传效果，也能让更多居民，特别是年轻一代，认识到预防骨痛热症的重要性。'},
+  {text:'贵校学生这次的表现令人刮目相看，充分展现了关心社会的精神，值得表扬。希望贵校能再接再厉，也希望校方能考虑本人以上的建议。谢谢！'},
+  {text:'林子杰　启', indent:false}
+];
+
+const offExWrap = document.getElementById('official-example');
+offExWrap.appendChild(el('div', null, gzLetterFlow(officialExampleParas)));
+
+
+/* ================================================================ */
+/* PAGE 2 :: 作文 content                                            */
+/* ================================================================ */
+document.getElementById('q3-table').innerHTML = `
+  <tr><th>结构</th><th>主要内容</th></tr>
+  <tr><td><b>引论</b></td><td>简单说明背景（background）+ 提出中心论点（thesis statement）<br><br>我认为，＿＿＿＿＿＿＿＿＿＿。（中心论点）</td></tr>
+  <tr><td><b>本论</b><br><span style="color:var(--ink-soft);font-size:12px;">证明论点 · PEEL</span></td>
+    <td>
+      <b>分论点一：</b>第一 / 首先，从……方面来看 / 我认为……。比如说……（举例／引用／对比）。这说明了……。因此，……。<br><br>
+      <b>分论点二：</b>第二 / 其次，从……方面来看 / 我认为……。比如说……。这说明了……。因此，……。<br><br>
+      <b>分论点三：</b>第三 / 再次，从……方面来看 / 我认为……。比如说……。这说明了……。因此，……。
+    </td></tr>
+  <tr><td><b>结论</b></td><td>总结概括 —— 总的来说，……</td></tr>
+`;
+
+/* ================================================================ */
+/* 情境作文（记叙文）—— 题目与范文                                     */
+/* ================================================================ */
+const qjQWrap = document.getElementById('qingjing-question');
+qjQWrap.appendChild(el('div','question-card', `
+  <p class="question-scenario">科学老师布置了一个小组活动，要同学们设计一款环保产品。你们小组在讨论时出现了分歧，组员之间针锋相对。作为组长的你，想方设法化解了矛盾。请写出事情的经过，以及你的感受。</p>
+`));
+
+const qingjingParas = [
+  {text:'那天科学课上，老师宣布了一项特别的作业——各组须设计一款环保产品，并在两周后向全班展示成果。作为组长的我，心里既兴奋又有些忐忑，毕竟这不是一件容易的事。', note:'略写'},
+  {text:'讨论会上，组员们各抒己见。家俊率先提出，我们可以设计一个用回收塑料瓶制成的雨水收集器，既实用又环保；然而，佩珊却摇摇头，坚持认为应该做一个太阳能充电宝，因为这更符合"科技环保"的主题，也更能吸引评审的眼球。两人的意见截然不同，谁也不肯让步。', note:'略写'},
+  {text:'"雨水收集器成本低，材料也容易找到，为什么不用？"家俊皱着眉头，提高了嗓门。', note:'详写'},
+  {text:'"可是太阳能充电宝更有创意，评审一定会更喜欢！"佩珊毫不示弱地反驳，双手抱胸，脸上写满了不服气。', note:'详写'},
+  {text:'两人你一言我一语，气氛渐渐变得紧张起来。其他组员有的低着头不敢说话，有的窃窃私语，讨论会俨然变成了一场"辩论赛"。看着眼前剑拔弩张的场面，我的心不禁揪了一下：如果再这样吵下去，别说完成作业了，恐怕连组员之间的感情都会受到影响。', note:'详写'},
+  {text:'我深吸一口气，努力让自己冷静下来，然后开口说道："家俊、佩珊，我明白你们都是为了这次作业着想，才会这么坚持自己的想法。不如我们先听听双方的理由，再一起讨论有没有折中的办法？"', note:'详写'},
+  {text:'我先请家俊详细说明雨水收集器的制作方法和优点，接着又请佩珊分享太阳能充电宝的设计理念。渐渐地，两人的语气缓和了下来。这时，我灵机一动，提议道："其实，我们可以把两个点子结合起来——制作一个装有太阳能充电装置的雨水收集器，这样既环保省钱，又有科技元素，岂不是两全其美？"', note:'详写'},
+  {text:'家俊和佩珊听了，先是愣了一下，随后都露出了恍然大悟的表情。"这个主意不错！"家俊笑着说。佩珊也点点头，附和道："对啊，我怎么没想到！"原本剑拔弩张的气氛，瞬间烟消云散，组员们又重新露出了笑容，热烈地讨论起细节来。', note:'详写'},
+  {text:'那一刻，我心里的大石头终于落了地，也为自己能化解这场矛盾而感到欣慰。', note:'略写'},
+  {text:'经过这次经历，我深深体会到，化解矛盾并不是一件容易的事，但只要愿意冷静倾听，理性沟通，往往就能找到让双方都满意的方案。我也认识到，团队合作需要包容与理解，因为每个人的意见都有它的价值，都应该被尊重。这次的经历，让我在往后的团队合作中，更懂得如何设身处地为他人着想，共同解决问题。', note:'略写'}
+];
+const qjExWrap = document.getElementById('qingjing-example');
+qingjingParas.forEach(p=>{
+  const noteType = p.note==='详写' ? 'detail' : 'brief';
+  qjExWrap.appendChild(el('div', null, gzPara(p.text, p.note, noteType)));
+});
+
+/* ================================================================ */
+/* 议论文 —— 题目与范文                                              */
+/* ================================================================ */
+/* ================================================================ */
+/* 议论文 —— 论据（事实论据 ＋ 名言名句）                              */
+/* ================================================================ */
+const lunjuFacts = [
+  { title:'一、勤奋 —— 达·芬奇画蛋', body:`<p>达·芬奇是欧洲文艺复兴时期意大利一位卓越的画家。他从小爱好绘画，父亲送他到佛罗伦萨，拜名画家为师。第一堂课老师教他画鸡蛋。他画了一个又一个，足足画了十几天，老师还是让他继续画鸡蛋，这一下达·芬奇想不通了，就问老师："为什么老是让我画鸡蛋？"老师告诉他：鸡蛋虽然都差不多，但天下没有绝对一样的，即使是同一个鸡蛋，角度不同，投下的光线也不同。比方说，把头抬高一点看，或者把眼睛放低一点看，这个蛋的椭圆形轮廓就会有差异。因此画蛋是基本功，基本功要练到得心应手。</p>
+    <p>达·芬奇从此苦练基本功，天天画蛋。一年，二年，三年……他画鸡蛋用的纸，已经堆得很高了。经过长期勤奋的练习，他终于创作出许多不朽的名画，成为著名的画家。</p>` },
+  { title:'二、珍惜时间 —— 爱迪生量灯泡容量', body:`<p>爱迪生从小就对很多事物感到好奇，而且喜欢亲自去试验一下，直到明白了其中的道理为止。长大以后，他就根据自己这方面的兴趣，一心一意做研究和发明的工作。他自己建立了一个实验室，一生共发明了电灯、电报机、留声机、电影机、磁力析矿机、压碎机等，总计两千余种东西。爱迪生的强烈研究精神，使他对改进人类的生活方式，作出了重大的贡献。</p>
+    <p>一天，爱迪生在实验室里工作，他递给助手一个没上灯口的空玻璃灯泡，说："你量量灯泡的容量。"他又低头工作了。过了好半天，他问："容量多少？"他没听见回答，转头看见助手拿着软尺在测量灯泡的周长、斜度，并拿了测得的数字伏在桌上计算。他说："时间，时间，怎么费那么多的时间呢？"爱迪生走过来，拿起那个空灯泡，向里面斟满了水，交给助手，说："里面的水倒在量杯里，马上告诉我它的容量。"助手立刻读出了数字。爱迪生说："这是多么容易的测量方法啊，它又准确，又节省时间，你怎么想不到呢？还去算，那岂不是白白地浪费时间吗？"助手的脸红了。</p>
+    <p>爱迪生喃喃地说："人生太短暂了，太短暂了，要节省时间，多做事情啊！"</p>` },
+  { title:'三、克服自己的缺陷，战胜自己', body:`
+    <p><b>1. 贝多芬：</b>著名的作曲家贝多芬一生有许多不朽之作，但很多有激情的曲目都是在他失聪后创作的。失聪，就预示着一个音乐家音乐生命的结束，然而，贝多芬想出了战胜自己的方式：通过自己对音乐的认识，自己在脑中创作，手上弹，再用手触摸五线谱的木板，往上写，他完成了《命运》交响曲。他战胜了自己，是顽强的意志、自己想出的方法帮助了他。</p>
+    <p><b>2. 爱迪生：</b>科学家爱迪生为人们发明了电灯泡，但在他成功的背后有过无数次的失败。他做了无数次的实验，用了无数的材料，最后才成功。他在这旅途中被很多人劝告过叫他放弃，但他以持之以恒的心态，坚持到底的决心，最后成功发明了电灯泡。</p>
+    <p><b>3. 海伦·凯勒：</b>海伦·凯勒是美国著名的作家和教育家，一岁多时因高烧导致失明、失聪，并无法说话。在苏利文老师的耐心指导下，她学会了手语、阅读和说话。尽管身有重障，海伦仍努力学习，成为第一位进入高等学府的盲聋哑人，并在毕业后积极为残障人士发声和募款。她以坚定的信念克服困境，展现出崇高的精神力量。</p>
+    <p><b>4. 科比·布莱恩特（Kobe Bryant）：</b>科比在职业生涯中多次受伤，最严重的一次是在2013年跟腱断裂。一般人可能会选择退役，但科比不愿向命运低头。他在受伤后不久便开始艰苦的康复训练，最终重返赛场。他没有被伤痛打倒，而是战胜了身体的极限，证明了强者不是没有缺陷，而是敢于面对并超越自己的脆弱。</p>
+    <p>NBA篮球赛季漫长，每天高强度训练和比赛让很多球员身心俱疲，但科比每天凌晨四点起床训练，从不懈怠。他曾说："你必须控制自己的思维，战胜内心的声音。"他战胜的不是别人，而是那个想偷懒的自己。自律和坚持，才是他持续优秀的关键。</p>
+    <p style="color:var(--ink-soft);font-size:0.85em;">其他励志故事：本地游泳选手 Joseph Schooling（约瑟夫·斯库林）、叶品秀（Yip Pin Xiu）。</p>` },
+  { title:'四、感恩 —— 罗斯福总统的三条理由', body:`<p>一次，美国前总统罗斯福家失盗，被偷去了许多东西，一位朋友闻讯后，忙写信安慰他，劝他不必太在意。罗斯福给朋友写了一封回信："亲爱的朋友，谢谢你来信安慰我，我现在很平安。因为第一，贼偷去的是我的东西，而没有伤害我的生命；第二，贼只偷去我部分东西，而不是全部；第三，最值得庆幸的是，做贼的是他，而不是我。"对任何一个人来说，失盗绝对是不幸的事，而罗斯福却找出了感恩的三条理由。这个故事，启发我们该如何感恩生活。</p>` }
+];
+const lunjuFactsWrap = document.getElementById('lunju-facts');
+lunjuFacts.forEach(f=> lunjuFactsWrap.appendChild(accordion(f.title, f.body)) );
+
+const lunjuQuotes = [
+  { title:'一、勤奋', lines:[
+    '聪明出于勤奋，天才在于积累。',
+    '天才是百分之一的灵感加上百分之九十九的勤奋。——爱迪生',
+    '锲而不舍／坚持不懈／持之以恒／百折不挠',
+    '业精于勤荒于嬉。（学业因为勤奋而精通，因为懒散而荒废。）',
+    '有志者，事竟成。（只要努力、坚持就能取得成功。）',
+    '只要功夫深，铁杵磨成针。'
+  ]},
+  { title:'二、好习惯', lines:[
+    '中国现代作家巴金：孩子成功教育从好习惯培养开始。',
+    '古希腊哲学家亚里士多德："做一件好事并不难，难的是养成一种做好事的习惯。"',
+    '古希腊哲学家亚里士多德说："人的行为总是一再重复，因此追求卓越不是单一的举动，而是习惯。"'
+  ]},
+  { title:'三、珍惜时间', lines:[
+    '一寸光阴一寸金，寸金难买寸光阴。',
+    '少壮不努力，老大徒伤悲。'
+  ]},
+  { title:'四、交友／认识人的真面目', lines:[
+    '近朱者赤，近墨者黑。',
+    '良药苦口利于病，忠言逆耳利于行。',
+    '路遥知马力，日久见人心。（时间长了，自然会了解一个人）',
+    '画虎画皮难画骨，知人知面不知心。',
+    '人不可貌相，海水不可斗量。'
+  ]},
+  { title:'五、道德修养', lines:[
+    '满招损，谦受益。（做人要谦虚）',
+    '己所不欲，勿施于人。（自己不想做的事情，也不要强迫别人去做。）',
+    '老吾老以及人之老，幼吾幼以及人之幼。（尊老爱幼／关爱老人）',
+    '勿以善小而不为，勿以恶小而为之。（好事要从一点一滴做起，坏事虽小也不要去做。）',
+    '各人自扫门前雪，莫管他人瓦上霜。（自私）',
+    '忍一时风平浪静，退一步海阔天空。（做人要宽容大度）'
+  ]},
+  { title:'六、感恩', lines:[
+    '滴水之恩，当涌泉相报。',
+    '知恩图报。',
+    '一位哲人说过："生活需要一颗感恩的心来创造。"',
+    '饮水思源。'
+  ]},
+  { title:'七、改过自新', lines:[
+    '人非圣贤，孰能无过？过而能改，善莫大焉。（知错能改）',
+    '浪子回头金不换。'
+  ]}
+];
+const lunjuQuotesWrap = document.getElementById('lunju-quotes');
+lunjuQuotes.forEach(q=>{
+  const body = '<ol style="padding-left:20px;">' + q.lines.map(l=>`<li style="margin-bottom:8px;">${l}</li>`).join('') + '</ol>';
+  lunjuQuotesWrap.appendChild(accordion(q.title, body));
+});
+
+const ylQWrap = document.getElementById('yilun-question');
+ylQWrap.appendChild(el('div','question-card', `
+  <p class="question-scenario">只有勇于尝试，才能发现自己的潜能。试加以讨论。</p>
+`));
+
+const yilunParas = [
+  {text:'人们常说，成功属于勇于尝试的人。然而，现实生活中，许多人因为害怕失败或未知，宁愿安于现状，也不愿意跨出舒适圈去尝试新事物。所谓"勇于尝试"，指的是敢于面对未知，不怕失败，积极主动地去做从未做过的事情。我认为，只有勇于尝试，才能发现自己的潜能，开拓无限的可能。'},
+  {text:'首先，勇于尝试有助于我们发现隐藏的能力。很多人因为害怕失败或未知，选择不去尝试，结果一辈子都不知道自己真正的能力所在。比如说，班上有位同学原本十分害怕在众人面前说话，但在老师的鼓励下，鼓起勇气参加了演讲比赛。比赛当天，他虽然紧张得手心冒汗，但完成演讲后，却发现自己的表达能力远比想象中来得好，甚至获得了评审的赞赏。脸书创办人马克·扎克伯格曾说："最大的风险，就是不去冒任何风险。"这说明了，唯有踏出尝试的第一步，我们才有机会认识真正的自己。因此，勇于尝试，才能发现潜藏在我们身上的能力。'},
+  {text:'其次，尝试新事物能拓展我们的知识与技能，为潜能的释放创造条件。新的经验能激活我们不同的思维方式和能力，让潜能有机会被看见。比如说，一名从未接触乐器的学生，尝试加入校内的乐队，学习吹奏萨克斯风。起初，他连基本的音阶都吹不好，但经过不断的练习，他不仅学会了演奏，还发现自己对音乐有着浓厚的兴趣与天赋。这说明了，只要愿意尝试，我们就能不断拓宽自己的能力范围，为潜能的爆发创造更多可能。因此，勇于尝试，能让我们的潜能得到更全面的发展。'},
+  {text:'此外，勇于尝试也能培养我们的自信心和坚韧的精神。尽管尝试的过程中难免会遇到挫折与失败，但正是这些经历，塑造了我们坚强的意志。发明家爱迪生在发明灯泡的过程中，经历了成千上万次的失败，但他从未因此气馁，反而说道："我没有失败，我只是找到了一万种行不通的方法。"正是凭着这种不轻言放弃的精神，爱迪生最终成功发明了电灯，改变了人类的生活。这说明了，勇于尝试的过程，本身就是磨炼自信与毅力的过程。因此，勇于尝试，能让我们变得更加坚韧、更有自信。'},
+  {text:'最后，从失败中总结经验，也能进一步挖掘并提升我们的潜能。尝试即使失败了，我们也能从中获得宝贵的经验，为下一次的突破打下基础。篮球巨星迈克尔·乔丹曾在高中时被校篮球队淘汰，但他并没有因此放弃篮球，反而把这次挫折当成前进的动力，日复一日地刻苦训练，最终成为家喻户晓的NBA传奇球星。他曾说："我在职业生涯中投丢了9000多球，输了将近300场比赛。我一次又一次失败，这就是我成功的原因。"这说明了，失败并不可怕，只要愿意从失败中总结经验，我们就能一步步挖掘出自己更大的潜能。'},
+  {text:'当然，也有人认为，冒险尝试可能会浪费时间，甚至让人遭受失败的打击，因此不值得冒险。然而，我认为，失败其实是成功的必经之路。若一个人因为害怕失败而不敢尝试，他便永远无法知道自己的极限在哪里，更谈不上成长与进步。相反地，唯有勇敢跨出尝试的一步，我们才能在失败与挫折中不断学习，逐渐接近成功。'},
+  {text:'总的来说，只有勇于尝试，才能真正发现自己的潜能，开拓属于自己的无限可能。因此，我呼吁同学们不要害怕失败，勇敢地面对每一个挑战，积极地尝试新事物，因为唯有如此，我们才能真正认识自己，活出更精彩的人生。'}
+];
+document.getElementById('yilun-example').appendChild(el('div', null, gzLetterFlow(yilunParas)));
+
+const openings = [
+  { title:'一、倒叙 Flashback', body:`
+      <p><b>(A)</b> ${pyAnnotate('在(zài)我(wǒ)的(de)＿＿＿（中(zhōng)学(xué)四(sì)年(nián)／成(chéng)长(zhǎng)过(guò)程(chéng)等(děng)）中(zhōng)，发(fā)生(shēng)过(guò)很(hěn)多(duō)事(shì)，每(měi)当(dāng)我(wǒ)想(xiǎng)起(qǐ)这(zhè)些(xiē)事(shì)情(qíng)的(de)时(shí)候(hòu)，其(qí)中(zhōng)最(zuì)＿＿＿（难(nán)忘(wàng)／高(gāo)兴(xìng)／悲(bēi)伤(shāng)等(děng)等(děng)）的(de)事(shì)，就(jiù)是(shì)＿＿＿（你(nǐ)要(yào)写(xiě)的(de)事(shì)）。每(měi)当(dāng)想(xiǎng)起(qǐ)它(tā)，我(wǒ)就(jiù)会(huì)＿＿＿（想(xiǎng)起(qǐ)什(shén)么(me)人(rén)／明(míng)白(bái)什(shén)么(me)道(dào)理(lǐ)）。')}</p>
+      <p style="color:var(--bamboo-dark);font-size:0.85em;">💡 ${pyAnnotate('小(xiǎo)贴(tiē)士(shì)：可(kě)以(yǐ)先(xiān)写(xiě)高(gāo)潮(cháo)或(huò)结(jié)尾(wěi)的(de)部(bù)分(fen)，后(hòu)面(miàn)段(duàn)落(luò)记(jì)得(dé)扣(kòu)回(huí)第(dì)一(yī)段(duàn)，做(zuò)到(dào)首(shǒu)尾(wěi)呼(hū)应(yìng)。')}</p>
+      <p><b>(B)</b> ${pyAnnotate('在(zài)我(wǒ)的(de)成(chéng)长(zhǎng)里(lǐ)，经(jīng)历(lì)过(guò)许(xǔ)许(xǔ)多(duō)多(duō)的(de)事(shì)情(qíng)，它(tā)们(men)就(jiù)像(xiàng)一(yí)页(yè)页(yè)小(xiǎo)船(chuán)，在(zài)我(wǒ)的(de)脑(nǎo)海(hǎi)里(lǐ)回(huí)荡(dàng)。它(tā)们(men)就(jiù)像(xiàng)沙(shā)滩(tān)上(shàng)的(de)贝(bèi)壳(ké)，有(yǒu)的(de)"光(guāng)彩(cǎi)照(zhào)人(rén)"而(ér)有(yǒu)的(de)却(què)是(shì)"丑(chǒu)陋(lòu)"的(de)。一(yí)件(jiàn)令(lìng)我(wǒ)十(shí)分(fēn)难(nán)忘(wàng)的(de)事(shì)，那(nà)是(shì)一(yì)颗(kē)"丑(chǒu)陋(lòu)的(de)贝(bèi)壳(ké)"。每(měi)当(dāng)我(wǒ)想(xiǎng)起(qǐ)那(nà)件(jiàn)事(shì)，就(jiù)让(ràng)我(wǒ)懊(ào)悔(huǐ)不(bù)已(yǐ)。事(shì)情(qíng)是(shì)这(zhè)样(yàng)的(de)……')}</p>
+      <p><b>(C)</b> ${pyAnnotate('生(shēng)活(huó)就(jiù)像(xiàng)一(yí)部(bù)电(diàn)影(yǐng)，由(yóu)无(wú)数(shù)的(de)小(xiǎo)插(chā)曲(qǔ)组(zǔ)成(chéng)。有(yǒu)些(xiē)如(rú)雾(wù)一(yì)般(bān)渐(jiàn)渐(jiàn)淡(dàn)薄(bó)，有(yǒu)些(xiē)却(què)像(xiàng)树(shù)根(gēn)一(yí)样(yàng)安(ān)安(ān)地(de)扎(zhā)在(zài)心(xīn)中(zhōng)。它(tā)们(men)有(yǒu)时(shí)会(huì)无(wú)意(yì)间(jiān)被(bèi)挖(wā)掘(jué)出(chū)来(lái)，呈(chéng)现(xiàn)在(zài)眼(yǎn)前(qián)……还(hái)记(jì)得(dé)我(wǒ)在(zài)一(yí)个(gè)月(yuè)前(qián)＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿（简(jiǎn)单(dān)说(shuō)明(míng)事(shì)情(qíng)）。事(shì)情(qíng)是(shì)这(zhè)样(yàng)的(de)……')}</p>
+      ` },
+  { title:'二、人物、物品开头法 (Start with Character / Object)', body:`<p><b>(A)</b> ${pyAnnotate('在(zài)我(wǒ)的(de)卧(wò)室(shì)的(de)床(chuáng)头(tóu)边(biān)，挂(guà)着(zhe)一(yì)张(zhāng)照(zhào)片(piàn)。这(zhè)张(zhāng)照(zhào)片(piàn)上(shàng)，我(wǒ)和(hé)我(wǒ)最(zuì)好(hǎo)的(de)朋(péng)友(yǒu)相(xiāng)拥(yōng)而(ér)笑(xiào)，每(měi)次(cì)看(kàn)到(dào)它(tā)，我(wǒ)都(dōu)能(néng)想(xiǎng)起(qǐ)＿＿＿＿＿＿＿＿。事(shì)情(qíng)是(shì)这(zhè)样(yàng)的(de)……')}</p>
+      ` },
+  { title:'三、道理／俗语开头法 (Start with Moral / Proverb Sayings)', body:`<p><b>(A)</b> ${pyAnnotate('人(rén)们(men)常(cháng)说(shuō)，没(méi)有(yǒu)人(rén)的(de)一(yì)生(shēng)是(shì)一(yì)帆(fān)风(fēng)顺(shùn)的(de)，难(nán)免(miǎn)会(huì)遇(yù)到(dào)挫(cuò)折(zhé)。我(wǒ)曾(céng)经(jīng)就(jiù)遭(zāo)遇(yù)了(le)一(yí)次(cì)令(lìng)人(rén)沮(jǔ)丧(sàng)的(de)失(shī)败(bài)，仿(fǎng)佛(fú)所(suǒ)有(yǒu)的(de)努(nǔ)力(lì)都(dōu)付(fù)诸(zhū)东(dōng)流(liú)，让(ràng)我(wǒ)陷(xiàn)入(rù)深(shēn)深(shēn)的(de)失(shī)落(luò)之(zhī)中(zhōng)。幸(xìng)运(yùn)的(de)是(shì)，当(dāng)时(shí)有(yǒu)一(yí)个(gè)朋(péng)友(yǒu)拉(lā)了(le)我(wǒ)一(yì)把(bǎ)，让(ràng)我(wǒ)重(chóng)新(xīn)振(zhèn)作(zuò)起(qǐ)来(lái)。事(shì)情(qíng)是(shì)这(zhè)样(yàng)的(de)……')}</p>
+      ` },
+  { title:'四、对话／心理描写开头法 (Start with Dialogue / Inner Thoughts)', body:`
+    <p>${pyAnnotate('"妈(mā)，你(nǐ)几(jǐ)时(shí)才(cái)买(mǎi)电(diàn)脑(nǎo)给(gěi)我(wǒ)？班(bān)上(shàng)的(de)同(tóng)学(xué)，家(jiā)里(lǐ)都(dōu)有(yǒu)电(diàn)脑(nǎo)了(le)。"我(wǒ)冲(chōng)妈(mā)妈(ma)嚷(rǎng)着(zhe)，满(mǎn)脸(liǎn)的(de)不(bù)满(mǎn)。')}</p>
+    <p>${pyAnnotate('"最(zuì)近(jìn)经(jīng)济(jì)实(shí)在(zài)是(shì)不(bù)景(jǐng)气(qì)"，妈(mā)妈(ma)为(wéi)难(nán)地(de)回(huí)答(dá)我(wǒ)。')}</p>
+    <p>${pyAnnotate('糟(zāo)糕(gāo)，这(zhè)又(yòu)是(shì)什(shén)么(me)题(tí)呀(ya)，我(wǒ)怎(zěn)么(me)完(wán)全(quán)不(bú)会(huì)做(zuò)？我(wǒ)急(jí)得(dé)团(tuán)团(tuán)转(zhuàn)，心(xīn)想(xiǎng)：我(wǒ)考(kǎo)试(shì)前(qián)努(nǔ)力(lì)复(fù)习(xí)得(de)知(zhī)识(shí)都(dōu)到(dào)哪(nǎ)里(lǐ)去(qù)了(le)？眼(yǎn)看(kàn)只(zhǐ)剩(shèng)下(xià) 10 分(fēn)钟(zhōng)，我(wǒ)随(suí)便(biàn)地(de)在(zài)数(shù)学(xué)卷(juàn)子(zi)上(shàng)写(xiě)了(le)一(yì)些(xiē)号(hào)码(mǎ)，希(xī)望(wàng)能(néng)混(hùn)过(guò)去(qù)。')}</p>
+    <p>${pyAnnotate('几(jǐ)天(tiān)后(hòu)，……')}</p>
+    ` },
+  { title:'五、人物设置开头法 (Character-Setting Opening)', body:`<p>${pyAnnotate('我(wǒ)一(yí)向(xiàng)是(shì)个(gè)＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿的(de)人(rén)，(举(jǔ)一(yì)些(xiē)例(lì)子(zi)说(shuō)明(míng))。但(dàn)是(shì)自(zì)从(cóng)经(jīng)历(lì)一(yí)件(jiàn)事(shì)后(hòu)，彻(chè)底(dǐ)改(gǎi)变(biàn)我(wǒ)＿＿＿＿＿＿＿＿＿＿＿＿的(de)性(xìng)格(gé)。那(nà)件(jiàn)事(shì)发(fā)生(shēng)在(zài) ＿＿＿＿＿＿＿＿＿＿＿，事(shì)情(qíng)是(shì)这(zhè)样(yàng)的(de)……')}</p>
+      ` }
+];
+const q4wrap = document.getElementById('q4-openings');
+openings.forEach(o=> q4wrap.appendChild(accordion(o.title, o.body)) );
+
+const endings = [
+  { text: pyAnnotate('虽(suī)然(rán)事(shì)情(qíng)已(yǐ)经(jīng)过(guò)了(le)＿＿＿（多(duō)久(jiǔ)？），但(dàn)是(shì)每(měi)当(dāng)我(wǒ)＿＿＿＿＿＿＿＿＿（看(kàn)见(jiàn)什(shén)么(me)人(rén)／听(tīng)到(dào)什(shén)么(me)声(shēng)／看(kàn)见(jiàn)什(shén)么(me)情(qíng)景(jǐng)）时(shí)，还(hái)是(shì)会(huì)想(xiǎng)起(qǐ)＿＿＿＿＿＿＿＿＿＿＿＿＿（你(nǐ)要(yào)写(xiě)的(de)事(shì)）。这(zhè)令(lìng)人(rén)终(zhōng)生(shēng)难(nán)忘(wàng)的(de)事(shì)时(shí)时(shí)（告(gào)诉(sù)／鞭(biān)策(cè)／警(jǐng)告(gào)／激(jī)励(lì)）我(wǒ)，＿＿＿＿＿＿＿＿＿（道(dào)理(lǐ) moral of story）。'),
+    gist:'Even though time has passed, a certain sight, sound or scene still brings the memory back, and the lesson learnt continues to guide the writer.' },
+  { text: pyAnnotate('这(zhè)段(duàn)刻(kè)骨(gǔ)铭(míng)心(xīn)的(de)经(jīng)历(lì)，至(zhì)今(jīn)让(ràng)我(wǒ)无(wú)法(fǎ)忘(wàng)怀(huái)。我(wǒ)深(shēn)深(shēn)地(de)领(lǐng)悟(wù)了(le)＿＿＿＿＿＿＿＿＿＿（道(dào)理(lǐ) moral of story）。我(wǒ)会(huì)把(bǎ)这(zhè)段(duàn)回(huí)忆(yì)好(hǎo)好(hǎo)铭(míng)记(jì)于(yú)心(xīn)，并(bìng)提(tí)醒(xǐng)自(zì)己(jǐ)要(yào)＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿（自(zì)己(jǐ)应(yīng)该(gāi)怎(zěn)么(me)样(yàng) how you should change for the better）。'),
+    gist:'This unforgettable experience taught the writer a lesson they will always remember, and they commit to becoming a better person because of it.' }
+];
+const q4endWrap = document.getElementById('q4-endings');
+const endCard = el('div','plain-card');
+endCard.innerHTML = '<ol style="padding-left:20px;">' + endings.map(e=>`<li style="margin-bottom:12px;">${e.text}</li>`).join('') + '</ol>';
+q4endWrap.appendChild(endCard);
+
+/* ================================================================ */
+/* 人物描写手法 (Character / Scene Description Techniques)           */
+/* ================================================================ */
+const charWrap = document.getElementById('char-techniques');
+
+// (一) 外貌描写
+const waimaoBody =
+  `<p>${pyAnnotate('外(wài)貌(mào)描(miáo)写(xiě)时(shí)，尽(jǐn)量(liàng)避(bì)免(miǎn)使(shǐ)用(yòng)"有(yǒu)"字(zì)，让(ràng)描(miáo)写(xiě)更(gèng)自(zì)然(rán)生(shēng)动(dòng)。')}</p>` +
+  twoCol('原句 Before', 'XX可漂亮了，她有一头卷卷的黄头发，有一双乌黑的葡萄般的大眼睛，有一个高高的鼻子，还有一张樱桃小嘴。',
+         '修改后 After', 'XX可漂亮啦。一头卷卷的黄头发自然地披在肩上。她的眼睛太吸引人了，乌黑乌黑葡萄一般。高高的鼻子，和樱桃小嘴配合起来，有点混血的味道，同学们可喜欢她啦。') +
+  `<p style="margin-top:14px;"><b>${pyAnnotate('外(wài)貌(mào)描(miáo)写(xiě)也(yě)可(kě)以(yǐ)是(shì)描(miáo)写(xiě)人(rén)物(wù)的(de)表(biǎo)情(qíng)')}</b> (expression)：</p>` +
+  phraseCards([
+    ['爸(bà)爸(ba)一(yí)看(kàn)到(dào)我(wǒ)，脸(liǎn)上(shàng)转(zhuǎn)忧(yōu)为(wéi)喜(xǐ)，随(suí)即(jí)变(biàn)青(qīng)','The moment Dad saw me, his face turned from worried to happy, then immediately paled.'],
+    ['她(tā)露(lòu)出(chū)了(le)灿(càn)烂(làn)的(de)笑(xiào)容(róng)对(duì)我(wǒ)说(shuō)','She gave me a radiant smile as she spoke.'],
+    ['他(tā)们(men)都(dōu)摇(yáo)摇(yáo)头(tóu)，并(bìng)使(shǐ)用(yòng)一(yì)种(zhǒng)很(hěn)冷(lěng)漠(mò)的(de)眼(yǎn)神(shén)看(kàn)着(zhe)我(wǒ)，好(hǎo)像(xiàng)看(kàn)到(dào)仇(chóu)人(rén)似(shì)的(de)。','They all shook their heads, looking at me coldly as if I were an enemy.'],
+    ['他(tā)的(de)脸(liǎn)色(sè)沉(chén)了(le)下(xià)来(lái)，愁(chóu)眉(méi)苦(kǔ)脸(liǎn)地(de)对(duì)我(wǒ)表(biǎo)示(shì)不(bù)满(mǎn)。','His expression darkened, and he showed his displeasure with a pained, gloomy face.'],
+    ['爸(bà)爸(ba)气(qì)得(dé)涨(zhàng)红(hóng)了(le)脸(liǎn)，浑(hún)身(shēn)发(fā)抖(dǒu)','Dad was so angry his face flushed red and his whole body shook.'],
+    ['脸(liǎn)变(biàn)得(dé)像(xiàng)纸(zhǐ)一(yí)样(yàng)白(bái)，眼(yǎn)睛(jīng)瞪(dèng)得(dé)圆(yuán)圆(yuán)的(de)','Face turning as pale as paper, eyes widening in shock.'],
+    ['用(yòng)严(yán)厉(lì)的(de)眼(yǎn)神(shén)狠(hěn)狠(hěn)地(de)瞪(dèng)了(le)我(wǒ)一(yì)眼(yǎn)','Glaring at me sharply with a stern look.'],
+    ['紧(jǐn)皱(zhòu)眉(méi)头(tóu)，用(yòng)死(sǐ)神(shén)般(bān)冰(bīng)冷(lěng)的(de)眼(yǎn)神(shén)死(sǐ)死(sǐ)地(de)盯(dīng)着(zhe)我(wǒ)','Brow tightly furrowed, staring at me with an icy, death-like gaze.']
+  ]);
+charWrap.appendChild(accordion('（一）外貌描写 (Appearance)', waimaoBody));
+
+// (二) 行动描写
+const xingdongBody =
+  `<p>${pyAnnotate('行(xíng)动(dòng)描(miáo)写(xiě)的(de)秘(mì)诀(jué)是(shì)"要(yào)动(dòng)连(lián)着(zhe)动(dòng)"')}——${pyAnnotate('把(bǎ)一(yí)个(gè)动(dòng)作(zuò)拆(chāi)成(chéng)几(jǐ)个(gè)连(lián)续(xù)的(de)小(xiǎo)动(dòng)作(zuò)来(lái)写(xiě)，画(huà)面(miàn)感(gǎn)会(huì)更(gèng)强(qiáng)。')}</p>` +
+  twoCol('原句 Before', '他发了一个旋转球，让人看得眼花缭乱。',
+         '修改后 After', '只见他高高地将球抛起，眼睛死死盯着，球接触球拍的一瞬间，他手腕轻轻一抖，脚一跺，球高速旋转着，向这边飞来，让人看得眼花缭乱。');
+charWrap.appendChild(accordion('（二）行动描写 (Action)', xingdongBody));
+
+// (三) 语言描写
+const speechVerbs = [
+  ['叫(jiào)','call/shout'],['喊(hǎn)','shout'],['吼(hǒu)','roar'],['问(wèn)','ask'],['嚷(rǎng)','yell'],['骂(mà)','scold'],
+  ['提(tí)醒(xǐng)','remind'],['鼓(gǔ)励(lì)','encourage'],['安(ān)慰(wèi)','comfort'],['劝(quàn)说(shuō)','persuade'],['讨(tǎo)论(lùn)','discuss'],
+  ['辩(biàn)解(jiě)','argue in defence'],['分(fēn)辩(biàn)','explain oneself'],['强(qiáng)词(cí)夺(duó)理(lǐ)','argue unreasonably'],['信(xìn)口(kǒu)开(kāi)河(hé)','talk recklessly'],
+  ['反(fǎn)驳(bó)','refute'],['反(fǎn)问(wèn)','ask rhetorically'],['质(zhì)问(wèn)','interrogate'],['询(xún)问(wèn)','inquire'],['抱(bào)怨(yuàn)','complain'],
+  ['指(zhǐ)责(zé)','accuse'],['呵(hē)斥(chì)','berate'],['斥(chì)责(zé)','reprimand'],['辱(rǔ)骂(mà)','insult'],['咒(zhòu)骂(mà)','curse at'],
+  ['破(pò)口(kǒu)大(dà)骂(mà)','swear loudly'],['警(jǐng)告(gào)','warn'],['默(mò)念(niàn)','recite silently'],['祈(qí)祷(dǎo)','pray'],
+  ['嘀(dí)咕(gu)','mutter'],['嘟(dū)囔(nāng)','grumble'],['喃(nán)喃(nán)自(zì)语(yǔ)','mutter to oneself'],['吞(tūn)吞(tūn)吐(tǔ)吐(tǔ)','speak hesitantly'],
+  ['喋(dié)喋(dié)不(bù)休(xiū)','chatter endlessly'],['窃(qiè)窃(qiè)私(sī)语(yǔ)','whisper'],['告(gào)诉(sù)','tell'],['回(huí)答(dá)','answer'],
+  ['唠(láo)叨(dao)','nag'],['叮(dīng)嘱(zhǔ)','urge earnestly'],['叮(dīng)咛(níng)再(zài)三(sān)','remind repeatedly'],['嘱(zhǔ)咐(fù)','instruct'],
+  ['插(chā)嘴(zuǐ)','interrupt'],['插(chā)话(huà)','interject'],['嘲(cháo)讽(fěng)','mock'],['讽(fěng)刺(cì)','satirise'],
+  ['哀(āi)求(qiú)','plead'],['乞(qǐ)求(qiú)','beg'],['哭(kū)诉(sù)','tearfully recount'],['语(yǔ)无(wú)伦(lún)次(cì)','speak incoherently'],
+  ['前(qián)言(yán)不(bù)搭(dā)后(hòu)语(yǔ)','speak inconsistently'],['大(dà)呼(hū)小(xiǎo)叫(jiào)','shout loudly'],['振(zhèn)振(zhèn)有(yǒu)词(cí)','speak with false confidence'],['异(yì)口(kǒu)同(tóng)声(shēng)','speak in unison']
+];
+const yuyanBody =
+  `<p>${pyAnnotate('写(xiě)对(duì)话(huà)时(shí)，尽(jǐn)量(liàng)避(bì)免(miǎn)只(zhǐ)用(yòng)"说(shuō)"字(zì)。')}</p>` +
+  `<p><b>方法一：用别的词语替换"说"</b></p>` +
+  chipGrid(speechVerbs) +
+  phraseCards([
+    ['汤(tāng)米(mǐ)满(mǎn)脸(liǎn)疑(yí)惑(huò)地(de)问(wèn)："它(tā)怎(zěn)么(me)了(le)？"','Tommy asked, looking utterly confused: "What\'s wrong with it?"'],
+    ['他(tā)激(jī)动(dòng)地(de)喊(hǎn)出(chū)来(lái)："我(wǒ)喜(xǐ)欢(huān)！我(wǒ)就(jiù)要(yào)这(zhè)只(zhī)小(xiǎo)狗(gǒu)！"','He shouted excitedly: "I love it! I want this puppy!"'],
+    ['妈(mā)妈(ma)送(sòng)我(wǒ)走(zǒu)出(chū)家(jiā)门(mén)，三(sān)番(fān)五(wǔ)次(cì)地(de)提(tí)醒(xǐng)我(wǒ)："雪(xuě)天(tiān)路(lù)滑(huá)，路(lù)上(shàng)要(yào)小(xiǎo)心(xīn)。"','As Mom saw me out the door, she reminded me again and again: "The roads are icy, be careful."']
+  ]) +
+  `<p style="margin-top:14px;"><b>方法二：在"说"字前加入表情、动作、语气、语调等细节</b></p>` +
+  phraseCards([
+    ['老(lǎo)奶(nǎi)奶(nai)笑(xiào)眯(mī)眯(mī)地(de)说(shuō)："你(nǐ)真(zhēn)是(shì)个(gè)好(hǎo)孩(hái)子(zi)！"（表(biǎo)情(qíng)）','Grandma said with a beaming smile: "You\'re such a good child!" (expression)'],
+    ['父(fù)亲(qīn)听(tīng)得(dé)津(jīn)津(jīn)有(yǒu)味(wèi)，不(bù)停(tíng)地(de)点(diǎn)着(zhe)头(tóu)："嗯(ń)……好(hǎo)。"（动(dòng)作(zuò)）','Father listened with great interest, nodding non-stop: "Mm... good." (action)'],
+    ['"抓(zhuā)到(dào)那(nà)个(gè)贼(zéi)，我(wǒ)一(yí)定(dìng)不(bú)会(huì)轻(qīng)易(yì)放(fàng)过(guò)他(tā)！"文(wén)辉(huī)愤(fèn)愤(fèn)不(bù)平(píng)地(de)说(shuō)。（语(yǔ)气(qì)）','"If I catch that thief, I definitely won\'t let him off easily!" Wenhui said indignantly. (tone)'],
+    ['"我(wǒ)没(méi)有(yǒu)偷(tōu)东(dōng)西(xi)。"立(lì)新(xīn)的(de)声(shēng)音(yīn)低(dī)沉(chén)而(ér)坚(jiān)决(jué)。（语(yǔ)调(diào)）','"I did not steal anything." Lixin\'s voice was low and firm. (intonation)']
+  ]);
+charWrap.appendChild(accordion('（三）语言描写 (Speech)', yuyanBody));
+
+// (四) 心理描写
+const xinliMethodsBody =
+  `<p>${pyAnnotate('写(xiě)心(xīn)理(lǐ)活(huó)动(dòng)时(shí)，尽(jǐn)量(liàng)避(bì)免(miǎn)只(zhǐ)用(yòng)"想(xiǎng)"字(zì)。')}</p>` +
+  `<p><b>方法一：去掉"我心想"</b></p>` +
+  phraseCards([
+    ['数(shù)学(xué)老(lǎo)师(shī)出(chū)了(le)一(yí)道(dào)难(nán)题(tí)要(yào)带(dài)回(huí)家(jiā)写(xiě)的(de)。天(tiān)哪(na)！这(zhè)该(gāi)怎(zěn)么(me)办(bàn)呢(ne)？','The maths teacher assigned a hard question for homework. Oh no! What should I do?'],
+    ['拜(bài)托(tuō)了(le)，拜(bài)托(tuō)了(le)，老(lǎo)师(shī)千(qiān)万(wàn)不(bú)要(yào)叫(jiào)到(dào)我(wǒ)啊(a)！老(lǎo)师(shī)的(de)目(mù)光(guāng)袭(xí)来(lái)，心(xīn)猛(měng)地(de)揪(jiū)了(le)一(yí)下(xià)，我(wǒ)的(de)头(tóu)埋(mái)得(dé)更(gèng)低(dī)了(le)。','Please, please don\'t call on me, teacher! As the teacher\'s gaze swept over, my heart clenched, and I buried my head even lower.']
+  ]) +
+  `<p style="margin-top:14px;"><b>方法二：用其他词代替"想"</b></p>` +
+  pinyinChips(['认(rèn)为(wéi)','觉(jué)得(dé)','知(zhī)道(dào)','害(hài)怕(pà)','怀(huái)疑(yí)','猜(cāi)测(cè)','考(kǎo)虑(lǜ)','计(jì)划(huà)','回(huí)忆(yì)','咯(gē)噔(dēng)','心(xīn)里(lǐ)念(niàn)叨(dao)','思(sī)绪(xù)万(wàn)千(qiān)','思(sī)潮(cháo)起(qǐ)伏(fú)']) +
+  phraseCards([
+    ['路(lù)灯(dēng)亮(liàng)了(le)，我(wǒ)心(xīn)里(lǐ)咯(gē)噔(dēng)一(yí)下(xià)：糟(zāo)了(le)！这(zhè)回(huí)又(yòu)晚(wǎn)了(le)！爸(bà)爸(ba)那(nà)双(shuāng)严(yán)厉(lì)的(de)眼(yǎn)睛(jīng)，不(bù)时(shí)出(chū)现(xiàn)在(zài)我(wǒ)的(de)眼(yǎn)前(qián)。我(wǒ)忐(tǎn)忑(tè)不(bù)安(ān)，像(xiàng)揣(chuāi)了(le)一(yì)只(zhī)小(xiǎo)兔(tù)子(zi)似(shì)的(de)，赶(gǎn)紧(jǐn)跑(pǎo)回(huí)了(le)家(jiā)。','The streetlights came on and my heart sank: oh no, I\'m late again! Dad\'s stern eyes kept flashing before me. Uneasy, as if I had a rabbit thumping in my chest, I hurried home.']
+  ]) +
+  `<p style="margin-top:14px;"><b>方法三：写幻觉</b></p>` +
+  phraseCards([
+    ['我(wǒ)仿(fǎng)佛(fú)看(kàn)见(jiàn)了(le)满(mǎn)卷(juàn)鲜(xiān)红(hóng)的(de)叉(chā)，组(zǔ)成(chéng)了(le)一(yì)张(zhāng)巨(jù)大(dà)的(de)网(wǎng)把(bǎ)我(wǒ)网(wǎng)住(zhù)，我(wǒ)不(bù)能(néng)动(dòng)弹(tan)，不(bù)能(néng)挣(zhēng)扎(zhá)。我(wǒ)仿(fǎng)佛(fú)看(kàn)到(dào)了(le)老(lǎo)师(shī)的(de)满(mǎn)面(miàn)怒(nù)容(róng)，仿(fǎng)佛(fú)听(tīng)到(dào)了(le)父(fù)母(mǔ)失(shī)望(wàng)的(de)叹(tàn)息(xī)。','I seemed to see a whole test paper covered in red crosses, forming a huge net that trapped me, unable to move or struggle. I seemed to see the teacher\'s furious face, and hear my parents\' disappointed sighs.']
+  ]) +
+  `<p style="margin-top:14px;"><b>方法四：加上语气词</b></p>` +
+  phraseCards([
+    ['咦(yí)？','Huh? (introduces doubt/confusion)'],
+    ['啊(ā)？','Oh? (introduces sudden realisation)'],
+    ['啊(a)／嘿(hēi)／哇(wa)！','Ah/Hey/Wow! (introduces pleasant surprise)'],
+    ['哼(hēng)！','Hmph! (introduces displeasure)']
+  ]);
+charWrap.appendChild(accordion('（四）心理描写：方法 (Psychology — Methods)', xinliMethodsBody));
+
+
+/* ================================================================ */
+/* 材料作文 —— 写作结构 + 题目与范文                                   */
+/* ================================================================ */
+document.getElementById('cailiao-ruhe-table').innerHTML = `
+  <tr><th>结构</th><th>内容</th></tr>
+  <tr><td><b>引论（开头）</b></td><td>
+    1　抄题＋读了之后，我感到……，因为…<br>
+    2　交待背景（background info: optional）<br>
+    ＋过渡句：那么，要＿＿＿＿＿＿＿＿＿＿＿＿＿＿（看题目，bring out the topic），就必须做到以下几点。Or 那么，应该如何＿＿＿＿＿＿＿＿呢？
+  </td></tr>
+  <tr><td><b>本论（怎样做，提出至少三个方法）</b></td><td>
+    <b>Point（主题句）：</b>提出怎么做，方法<br>
+    <b>Explain：</b>为什么这个方面重要？<br>
+    <b>Example：</b>实际例子具体说明怎么样去做<br>
+    <b>Elaboration：</b>这个方法会带来什么好处，怎么培养？<br>
+    <b>Link：</b>联系重点
+  </td></tr>
+  <tr><td><b>结论（总结）</b></td><td>最后一段：总结上面所谈的几个方法，然后再提出希望。</td></tr>
+`;
+
+document.getElementById('cailiao-yilun-table').innerHTML = `
+  <tr><th>段落</th><th>内容</th></tr>
+  <tr><td>1　开头／引言</td><td>1　抄题＋说明感想<br>2　过渡句：（看题目）</td></tr>
+  <tr><td>2　PEEL1</td><td>首先，因为，比如说，所以</td></tr>
+  <tr><td>3　PEEL2</td><td>其次，……</td></tr>
+  <tr><td>4　PEEL3</td><td>再次，……</td></tr>
+  <tr><td>5　总结：提出解决问题的建议</td><td>总之，要让更多人…／要解决这个问题，我们可以…（简单写）希望…</td></tr>
+`;
+
+const cailiaoQWrap = document.getElementById('cailiao-question');
+cailiaoQWrap.appendChild(el('div','question-card', `
+  <p class="question-scenario">根据以下材料，写一篇文章，谈谈培养阅读习惯的重要性。</p>
+  <div class="example-block" style="margin-top:10px;">在资讯爆炸的时代，阅读是获取可靠信息的有效途径。无论是纸本书籍还是电子书，长期坚持阅读的人，在学习和工作中更能抓住重点，解决问题的能力也更强。</div>
+`));
+
+const cailiaoIntro = '在资讯爆炸的时代，阅读是获取可靠信息的有效途径。无论是纸本书籍还是电子书，长期坚持阅读的人，在学习和工作中更能抓住重点，解决问题的能力也更强。读完这段材料后，我深有感触，我认为，培养阅读习惯非常重要。那么，阅读习惯究竟能为我们带来哪些好处呢？';
+const cailiaoPoint1 = '首先，阅读习惯能帮助我们筛选和理解信息。因为在资讯爆炸的时代，网络上充斥着真假难辨的信息，若没有阅读的习惯，我们很容易被片面或错误的信息误导，甚至做出错误的判断。比如说，一名经常阅读的学生，在浏览网络新闻时，会习惯性地查证消息来源，分辨哪些是可靠信息，哪些是夸大或不实的报道；反观一名不常阅读的人，则可能全盘接受网络上的说法，甚至以讹传讹。所以，长期坚持阅读，能让我们培养出敏锐的判断力和批判性思维，不轻易被虚假信息左右。';
+const cailiaoPoint2 = '其次，培养阅读习惯也能提升我们的学习和工作能力。因为阅读能帮助我们不断积累知识，增强理解力和分析力，让我们在面对各种挑战时，能够更快地抓住重点，找出解决问题的方法。比如说，我的表哥志强从中学时期就养成了每天阅读的习惯，无论是新闻、历史书籍还是专业书刊，他都会抽出时间阅读。升上大学后，他在准备一份关于城市交通问题的报告时，凭借长期阅读累积的知识和分析能力，很快就抓住了报告的核心，并从多个角度提出解决方案，因此获得教授的高度评价。如今他步入职场，面对复杂的项目时，也总能迅速理清思路，找出问题的症结所在，同事们都称赞他反应快、思路清晰。所以，阅读习惯是提升学习与工作表现的重要基础。';
+const cailiaoPoint3 = '再次，阅读也能丰富我们的人生视野，提高生活质量。因为书本蕴藏着不同的文化、观点和知识，透过阅读，我们能够接触到理财、健康、兴趣爱好等各方面的实用技能，让生活变得更充实、更有规划。比如说，喜欢阅读理财书籍的人，往往更懂得如何妥善规划自己的财务，过上更有品质的生活；喜欢阅读文学作品的人，也能从中获得心灵上的滋养，开拓视野，理解不同的文化与观点。所以，阅读不仅能提升个人能力，也能丰富我们的生活。';
+const cailiaoConclusion = '总的来说，长期坚持阅读，不仅能帮助我们获取可靠信息、提升学习与工作能力，还能丰富我们的人生视野，提高生活质量。因此，我认为培养阅读习惯非常重要。希望大家都能从今天开始，养成良好的阅读习惯，不断充实自己，提升自我素养，成为一个更有能力、更有智慧的人。';
+
+const cailiaoExWrap = document.getElementById('cailiao-example');
+cailiaoExWrap.appendChild(el('div', null, gzPara(cailiaoIntro)));
+cailiaoExWrap.appendChild(el('div', null, gzPara(cailiaoPoint1, '呼应材料作文题目：「在资讯爆炸的时代，阅读是获取可靠信息的有效途径。」', 'echo')));
+cailiaoExWrap.appendChild(el('div', null, gzPara(cailiaoPoint2, '呼应材料作文题目：「长期坚持阅读的人，在学习和工作中更能抓住重点，解决问题的能力也更强。」', 'echo')));
+cailiaoExWrap.appendChild(el('div', null, gzPara(cailiaoPoint3, '⚠️ 提醒：这是第三个分论点，应提出与以上两点不同的角度，避免和「筛选信息」「提升学习工作能力」重复！', 'warn')));
+cailiaoExWrap.appendChild(el('div', null, gzPara(cailiaoConclusion)));
+
+const emotions = [
+  {name:'高兴 happy', lines:[
+    ['听(tīng)了(le)他(tā)的(de)话(huà)，我(wǒ)的(de)心(xīn)里(lǐ)乐(lè)开(kāi)了(le)花(huā)，嘴(zuǐ)都(dōu)笑(xiào)歪(wāi)了(le)。','Hearing what he said, my heart blossomed with joy and I couldn\'t stop grinning.'],
+    ['爸(bà)爸(ba)同(tóng)意(yì)了(le)她(tā)的(de)要(yāo)求(qiú)，他(tā)心(xīn)花(huā)怒(nù)放(fàng)，喜(xǐ)悦(yuè)飞(fēi)上(shàng)眉(méi)梢(shāo)，两(liǎng)只(zhī)眼(yǎn)睛(jīng)眯(mī)得(dé)像(xiàng)两(liǎng)个(gè)小(xiǎo)小(xiǎo)的(de)月(yuè)牙(yá)儿(er)。','Dad agreed to her request; he was overjoyed, delight lighting up his brow, his eyes narrowing into two little crescent moons.'],
+    ['哥(gē)哥(ge)今(jīn)天(tiān)特(tè)别(bié)高(gāo)兴(xìng)，脸(liǎn)上(shàng)洋(yáng)溢(yì)着(zhe)喜(xǐ)悦(yuè)的(de)光(guāng)彩(cǎi)，嘴(zuǐ)里(lǐ)一(yì)直(zhí)不(bù)停(tíng)地(de)哼(hēng)着(zhe)歌(gē)。','Big brother is especially happy today, his face glowing with joy, humming a tune non-stop.'],
+    ['当(dāng)从(cóng)校(xiào)长(zhǎng)的(de)手(shǒu)里(lǐ)接(jiē)过(guò)奖(jiǎng)杯(bēi)时(shí)，我(wǒ)的(de)心(xīn)情(qíng)是(shì)非(fēi)笔(bǐ)墨(mò)所(suǒ)能(néng)形(xíng)容(róng)的(de)。','As I received the trophy from the principal, my feelings were beyond what words could describe.']
+  ]},
+  {name:'羞愧、惭愧 embarrassed', lines:[
+    ['听(tīng)了(le)他(tā)的(de)话(huà)后(hòu)，我(wǒ)感(gǎn)到(dào)脸(liǎn)上(shàng)热(rè)辣(là)辣(là)的(de)，像(xiàng)是(shì)挨(ái)了(le)一(yì)记(jì)重(zhòng)重(zhòng)的(de)耳(ěr)光(guāng)。','After hearing what he said, my face burned as if I had been slapped hard.'],
+    ['听(tīng)了(le)老(lǎo)师(shī)的(de)话(huà)，我(wǒ)面(miàn)红(hóng)耳(ěr)赤(chì)，羞(xiū)愧(kuì)地(de)低(dī)下(xià)头(tóu)，两(liǎng)只(zhī)手(shǒu)不(bù)知(zhī)该(gāi)往(wǎng)哪(nǎ)里(lǐ)放(fàng)。','Hearing the teacher\'s words, I flushed red with shame, lowering my head, not knowing where to put my hands.'],
+    ['我(wǒ)的(de)脸(liǎn)"唰(shuā)"一(yí)下(xià)红(hóng)了(le)，心(xīn)"扑(pū)通(tōng)扑(pū)通(tōng)"地(de)跳(tiào)个(gè)不(bù)停(tíng)，我(wǒ)不(bù)敢(gǎn)看(kàn)老(lǎo)师(shī)，恨(hèn)不(bu)得(dé)能(néng)变(biàn)成(chéng)一(yì)只(zhī)老(lǎo)鼠(shǔ)，找(zhǎo)个(gè)地(dì)洞(dòng)钻(zuān)进(jìn)去(qù)。','My face turned red in an instant, my heart pounding wildly; I dared not look at the teacher, wishing I could turn into a mouse and burrow into a hole.']
+  ]},
+  {name:'后悔 remorseful', lines:[
+    ['爸(bà)爸(ba)虽(suī)然(rán)没(méi)有(yǒu)骂(mà)我(wǒ)，但(dàn)他(tā)那(nà)失(shī)望(wàng)的(de)眼(yǎn)神(shén)却(què)令(lìng)我(wǒ)悔(huǐ)恨(hèn)交(jiāo)加(jiā)。','Although Dad did not scold me, his disappointed look filled me with regret and self-reproach.'],
+    ['对(duì)自(zì)己(jǐ)一(yì)时(shí)冲(chōng)动(dòng)而(ér)酿(niàng)成(chéng)大(dà)错(cuò)，他(tā)后(hòu)悔(huǐ)莫(mò)及(jí)，泪(lèi)水(shuǐ)不(bù)禁(jīn)涌(yǒng)了(le)出(chū)来(lái)。','Regretting the big mistake caused by his momentary impulse, he could not help but burst into tears.'],
+    ['妈(mā)妈(ma)脸(liǎn)上(shàng)垂(chuí)落(luò)的(de)泪(lèi)滴(dī)像(xiàng)重(zhòng)锤(chuí)一(yí)样(yàng)打(dǎ)在(zài)我(wǒ)的(de)心(xīn)上(shàng)，让(ràng)我(wǒ)悔(huǐ)不(bù)当(dāng)初(chū)。','The tears falling down Mom\'s face struck my heart like a heavy hammer, making me regret my earlier choice.'],
+    ['我(wǒ)真(zhēn)是(shì)恨(hèn)透(tòu)了(le)自(zì)己(jǐ)，心(xīn)里(lǐ)不(bù)知(zhī)有(yǒu)多(duō)懊(ào)悔(huǐ)。想(xiǎng)了(le)很(hěn)久(jiǔ)，我(wǒ)决(jué)定(dìng)向(xiàng)妹(mèi)妹(mei)道(dào)歉(qiàn)，请(qǐng)他(tā)原(yuán)谅(liàng)我(wǒ)。','I truly hated myself, my heart filled with regret. After much thought, I decided to apologise to my sister and ask for her forgiveness.'],
+    ['看(kàn)着(zhe)考(kǎo)卷(juàn)上(shàng)的(de)"20分(fēn)"，我(wǒ)真(zhēn)后(hòu)悔(huǐ)开(kāi)始(shǐ)之(zhī)前(qián)没(méi)有(yǒu)好(hǎo)好(hǎo)复(fù)习(xí)，真(zhēn)是(shì)"早(zǎo)知(zhī)今(jīn)日(rì)，何(hé)必(bì)当(dāng)初(chū)"。','Looking at the "20 marks" on my test paper, I really regretted not revising properly beforehand — truly, "had I known this, why did I do that."'],
+    ['晚(wǎn)上(shàng)，我(wǒ)躺(tǎng)在(zài)床(chuáng)上(shàng)翻(fān)来(lái)覆(fù)去(qù)睡(shuì)不(bú)着(zháo)，想(xiǎng)起(qǐ)早(zǎo)上(shàng)发(fā)生(shēng)的(de)事(shì)，我(wǒ)的(de)心(xīn)里(lǐ)又(yòu)悔(huǐ)又(yòu)恨(hèn)。唉(āi)！如(rú)果(guǒ)世(shì)界(jiè)上(shàng)有(yǒu)卖(mài)后(hòu)悔(huǐ)药(yào)多(duō)好(hǎo)啊(a)！','At night, I tossed and turned in bed unable to sleep, thinking of what happened that morning, my heart full of regret. Ah! If only there were regret pills for sale in this world!'],
+    ['真(zhēn)希(xī)望(wàng)时(shí)间(jiān)能(néng)够(gòu)倒(dào)流(liú)，那(nà)么(me)我(wǒ)一(yí)定(dìng)不(bú)会(huì)做(zuò)出(chū)这(zhè)个(gè)错(cuò)误(wù)的(de)决(jué)定(dìng)！','I really wish time could flow backwards — then I definitely would not have made this wrong decision!']
+  ]},
+  {name:'伤心、忧愁 sadness', lines:[
+    ['看(kàn)到(dào)这(zhè)情(qíng)景(jǐng)，我(wǒ)心(xīn)如(rú)刀(dāo)割(gē)，用(yòng)力(lì)地(de)咬(yǎo)着(zhe)嘴(zuǐ)唇(chún)，不(bù)让(ràng)眼(yǎn)里(lǐ)的(de)眼(yǎn)泪(lèi)流(liú)出(chū)来(lái)。','Seeing this scene, my heart felt like it was being cut by a knife; I bit my lip hard, holding back my tears.'],
+    ['我(wǒ)听(tīng)她(tā)说(shuō)完(wán)，只(zhǐ)觉(jué)得(dé)脑(nǎo)袋(dài)"轰(hōng)"的(de)一(yí)下(xià)，鼻(bí)子(zi)一(yì)酸(suān)，两(liǎng)行(háng)泪(lèi)珠(zhū)滚(gǔn)了(le)下(xià)来(lái)。','After hearing her finish, my mind went blank with a jolt, my nose tingled, and two lines of tears rolled down.'],
+    ['我(wǒ)拿(ná)着(zhe)成(chéng)绩(jì)册(cè)，迈(mài)着(zhe)沉(chén)重(zhòng)的(de)脚(jiǎo)步(bù)往(wǎng)家(jiā)走(zǒu)，真(zhēn)想(xiǎng)找(zhǎo)个(gè)没(méi)人(rén)的(de)地(dì)方(fāng)痛(tòng)痛(tòng)快(kuài)快(kuài)地(de)哭(kū)一(yì)场(chǎng)。','Holding my report book, I trudged home with heavy steps, really wanting to find somewhere private for a good, thorough cry.'],
+    ['她(tā)的(de)脸(liǎn)色(sè)阴(yīn)暗(àn)得(dé)像(xiàng)乌(wū)云(yún)密(mì)布(bù)的(de)天(tiān)空(kōng)，眼(yǎn)泪(lèi)随(suí)时(shí)都(dōu)会(huì)雨(yǔ)点(diǎn)似(shì)的(de)落(luò)下(xià)来(lái)。','Her face was as dark as a sky thick with clouds, tears ready to fall like rain at any moment.'],
+    ['他(tā)一(yì)把(bǎ)鼻(bí)涕(tì)一(yì)把(bǎ)泪(lèi)，哭(kū)成(chéng)泪(lèi)人(rén)似(shì)的(de)。','Sobbing uncontrollably, snot and tears all over, he cried as if he had turned into a "tear person."'],
+    ['他(tā)皱(zhòu)着(zhe)眉(méi)头(tóu)，坐(zuò)在(zài)一(yì)旁(páng)唉(āi)声(shēng)叹(tàn)气(qì)。','He frowned, sitting to the side sighing repeatedly.'],
+    ['他(tā)闷(mèn)闷(mèn)不(bú)乐(lè)地(de)坐(zuò)在(zài)那(nà)儿(er)，愁(chóu)眉(méi)紧(jǐn)锁(suǒ)，好(hǎo)像(xiàng)心(xīn)里(lǐ)压(yā)着(zhe)千(qiān)万(wàn)事(shì)情(qíng)。','He sat there gloomily, brow tightly furrowed, as if a thousand worries weighed on his heart.'],
+    ['她(tā)的(de)两(liǎng)道(dào)眉(méi)毛(máo)整(zhěng)日(rì)紧(jǐn)紧(jǐn)地(de)皱(zhòu)着(zhe)，像(xiàng)没(méi)有(yǒu)钥(yào)匙(shi)可(kě)开(kāi)启(qǐ)的(de)两(liǎng)把(bǎ)锁(suǒ)。','Her two eyebrows stayed tightly knitted all day, like two locks with no key to open them.']
+  ]},
+  {name:'生气 angry', lines:[
+    ['气(qì)得(dé)脸(liǎn)色(sè)发(fā)青(qīng)','So angry his face turned pale/blue'],
+    ['气(qì)得(dé)紧(jǐn)握(wò)拳(quán)头(tóu)','So angry he clenched his fists tightly'],
+    ['气(qì)得(dé)脸(liǎn)红(hóng)脖(bó)子(zi)粗(cū)','So angry his face reddened and neck bulged'],
+    ['气(qì)得(dé)牙(yá)齿(chǐ)咬(yǎo)得(dé)咯(gé)咯(gé)响(xiǎng)','So angry his teeth gnashed audibly'],
+    ['气(qì)得(dé)脖(bó)子(zi)上(shàng)青(qīng)筋(jīn)鼓(gǔ)起(qǐ)','So angry the veins on his neck bulged'],
+    ['脸(liǎn)色(sè)发(fā)青(qīng)，双(shuāng)眼(yǎn)喷(pēn)火(huǒ)','Face turning pale, eyes blazing with fire'],
+    ['气(qì)得(dé)像(xiàng)一(yí)个(gè)飘(piāo)在(zài)空(kōng)中(zhōng)的(de)气(qì)球(qiú)，随(suí)时(shí)都(dōu)会(huì)爆(bào)炸(zhà)。','As angry as a balloon floating in the air, ready to burst at any moment.']
+  ]},
+  {name:'着急 anxious', lines:[
+    ['急(jí)得(dé)直(zhí)跺(duò)脚(jiǎo)','So anxious he kept stamping his feet'],
+    ['急(jí)得(dé)团(tuán)团(tuán)转(zhuàn)','So anxious he paced round and round'],
+    ['急(jí)得(dé)心(xīn)口(kǒu)狂(kuáng)跳(tiào)','So anxious his heart pounded wildly'],
+    ['急(jí)得(dé)六(liù)神(shén)无(wú)主(zhǔ)','So anxious he was at a total loss'],
+    ['急(jí)得(dé)手(shǒu)足(zú)无(wú)措(cuò)','So anxious he did not know what to do with his hands and feet'],
+    ['急(jí)得(dé)眼(yǎn)泪(lèi)都(dōu)流(liú)出(chū)来(lái)了(le)','So anxious that tears came out'],
+    ['急(jí)得(dé)像(xiàng)热(rè)锅(guō)上(shàng)的(de)蚂(mǎ)蚁(yǐ)','As anxious as an ant on a hot pan']
+  ]},
+  {name:'吃惊 shocked', lines:[
+    ['她(tā)听(tīng)了(le)，惊(jīng)得(dé)嘴(zuǐ)巴(ba)张(zhāng)得(dé)大(dà)大(dà)的(de)，半(bàn)天(tiān)没(méi)合(hé)拢(lǒng)。','Hearing it, she was so shocked her mouth fell wide open and stayed that way for a long while.'],
+    ['我(wǒ)一(yí)见(jiàn)这(zhè)情(qíng)景(jǐng)，就(jiù)好(hǎo)像(xiàng)身(shēn)上(shàng)触(chù)电(diàn)似(shì)的(de)打(dǎ)了(le)个(gè)冷(lěng)颤(zhàn)。','The moment I saw this scene, I shuddered as if an electric shock had run through my body.'],
+    ['我(wǒ)倒(dào)吸(xī)了(le)一(yì)口(kǒu)冷(lěng)气(qì)，两(liǎng)只(zhī)脚(jiǎo)像(xiàng)被(bèi)铁(tiě)钉(dīng)钉(dìng)死(sǐ)在(zài)地(dì)上(shàng)，一(yí)动(dòng)也(yě)不(bù)能(néng)动(dòng)了(le)。','I gasped sharply, my feet as if nailed to the ground, unable to move at all.'],
+    ['看(kàn)到(dào)这(zhè)情(qíng)景(jǐng)，他(tā)的(de)笑(xiào)容(róng)在(zài)脸(liǎn)上(shàng)僵(jiāng)住(zhù)了(le)，嘴(zuǐ)角(jiǎo)一(yì)抽(chōu)一(yì)抽(chōu)的(de)，额(é)上(shàng)汗(hàn)珠(zhū)闪(shǎn)闪(shǎn)发(fā)光(guāng)。','Seeing this scene, the smile froze on his face, the corner of his mouth twitching, sweat glistening on his forehead.'],
+    ['听(tīng)了(le)我(wǒ)的(de)话(huà)，她(tā)的(de)脸(liǎn)变(biàn)得(dé)像(xiàng)纸(zhǐ)一(yí)样(yàng)白(bái)，眼(yǎn)睛(jīng)瞪(dèng)得(dé)圆(yuán)圆(yuán)的(de)。','Hearing what I said, her face turned as pale as paper, her eyes widening in shock.']
+  ]},
+  {name:'害怕 scared', lines:[
+    ['吓(xià)得(dé)脸(liǎn)青(qīng)唇(chún)白(bái)，浑(hún)身(shēn)哆(duō)嗦(suo)，嘴(zuǐ)唇(chún)不(bù)停(tíng)地(de)颤(chàn)抖(dǒu)着(zhe)','So scared his face turned pale, his whole body trembling, lips shaking non-stop'],
+    ['吓(xià)得(dé)浑(hún)身(shēn)发(fā)抖(dǒu)，直(zhí)冒(mào)冷(lěng)汗(hàn)','So scared his whole body shook, breaking into a cold sweat'],
+    ['心(xīn)怦(pēng)怦(pēng)直(zhí)跳(tiào)，好(hǎo)像(xiàng)要(yào)跳(tiào)出(chū)喉(hóu)咙(lóng)似(shì)的(de)','Heart pounding hard, as if it would leap out of the throat'],
+    ['全(quán)身(shēn)的(de)筋(jīn)骨(gǔ)都(dōu)在(zài)搐(chù)动(dòng)，牙(yá)齿(chǐ)和(hé)牙(yá)齿(chǐ)，忍(rěn)不(bú)住(zhù)发(fā)出(chū)互(hù)相(xiāng)撞(zhuàng)击(jī)的(de)声(shēng)音(yīn)。','Every muscle and joint twitched, teeth chattering against each other uncontrollably.']
+  ]},
+  {name:'紧张 nervous', lines:[
+    ['紧(jǐn)张(zhāng)得(dé)手(shǒu)心(xīn)冒(mào)汗(hàn)','So nervous his palms sweated'],
+    ['紧(jǐn)张(zhāng)得(dé)双(shuāng)腿(tuǐ)发(fā)软(ruǎn)','So nervous his legs went weak'],
+    ['紧(jǐn)张(zhāng)得(dé)手(shǒu)脚(jiǎo)发(fā)抖(dǒu)','So nervous his hands and feet trembled'],
+    ['心(xīn)怦(pēng)怦(pēng)直(zhí)跳(tiào)，就(jiù)像(xiàng)十(shí)五(wǔ)个(gè)吊(diào)桶(tǒng)打(dǎ)水(shuǐ)——七(qī)上(shàng)八(bā)下(xià)','Heart pounding hard, like fifteen buckets drawing water — up and down in turmoil']
+  ]},
+  {name:'感动 touched', lines:[
+    ['一(yì)股(gǔ)暖(nuǎn)流(liú)涌(yǒng)上(shàng)心(xīn)头(tóu)','A warm current surged up in my heart'],
+    ['非(fēi)常(cháng)感(gǎn)动(dòng)，泪(lèi)水(shuǐ)夺(duó)眶(kuàng)而(ér)出(chū)','Deeply moved, tears welled up and burst from my eyes'],
+    ['我(wǒ)的(de)眼(yǎn)眶(kuàng)一(yì)丝(sī)灼(zhuó)热(rè)，忘(wàng)了(le)想(xiǎng)说(shuō)的(de)话(huà)。','My eyes felt a flush of warmth, and I forgot what I wanted to say.'],
+    ['心(xīn)里(lǐ)似(sì)乎(hū)有(yǒu)一(yì)股(gǔ)暖(nuǎn)流(liú)在(zài)小(xiǎo)小(xiǎo)的(de)心(xīn)房(fáng)中(zhōng)穿(chuān)梭(suō)。','It felt as if a warm current was flowing through my small heart.']
+  ]},
+  {name:'矛盾 conflicted', lines:[
+    ['怎(zěn)么(me)办(bàn)？怎(zěn)么(me)办(bàn)？我(wǒ)心(xīn)里(lǐ)很(hěn)是(shì)矛(máo)盾(dùn)，手(shǒu)变(biàn)得(dé)愈(yù)来(lái)愈(yù)冷(lěng)，我(wǒ)不(bù)停(tíng)地(de)搓(cuō)着(zhe)手(shǒu)，考(kǎo)虑(lǜ)着(zhe)要(yào)不(bú)要(yào)＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿','What should I do? What should I do? I felt very conflicted inside, my hands growing colder as I rubbed them, wondering whether or not to ___.'],
+    ['我(wǒ)的(de)心(xīn)里(lǐ)非(fēi)常(cháng)矛(máo)盾(dùn)，有(yǒu)说(shuō)不(bù)出(chū)的(de)滋(zī)味(wèi)儿(er)，翻(fān)山(shān)倒(dǎo)海(hǎi)的(de)，很(hěn)受(shòu)煎(jiān)熬(áo)。','I felt deeply conflicted inside, with an indescribable feeling, churning like overturning mountains and seas, suffering greatly.'],
+    ['我(wǒ)心(xīn)跳(tiào)加(jiā)快(kuài)，手(shǒu)无(wú)足(zú)措(cuò)，脑(nǎo)里(lǐ)一(yí)片(piàn)混(hùn)沌(dùn)，不(bù)知(zhī)道(dào)自(zì)己(jǐ)在(zài)干(gàn)什(shén)么(me)，将(jiāng)要(yào)去(qù)干(gàn)什(shén)么(me)。','My heart raced, I did not know what to do with my hands, my mind a total blur, not knowing what I was doing or about to do.']
+  ]}
+];
+const emoGrid = document.getElementById('emotion-grid');
+emotions.forEach(e=>{
+  const body = e.lines.map(l=>phraseCard(l[0], l[1])).join('');
+  emoGrid.appendChild(accordion(e.name, body, 'emo-card'));
+});
+</script>
+</body>
+</html>
